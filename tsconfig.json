@@ -8,18 +8,24 @@
         "esModuleInterop": true,
         "declaration": false,
         "experimentalDecorators": true,
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
         "importHelpers": true,
+        "strict": true,
+        "strictNullChecks": true,
         "paths": {
             "ngx-pinch-zoom": ["dist/ngx-pinch-zoom/ngx-pinch-zoom", "dist/ngx-pinch-zoom"]
         },
         "target": "ES2022",
-        "module": "es2020",
-        "lib": ["es2018", "dom"],
+        "module": "ES2022",
+        "lib": ["ES2022", "dom"],
         "types": ["node"],
         "useDefineForClassFields": false
     },
     "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }

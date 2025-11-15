@@ -1,78 +1,262 @@
-# Note
+# ngx-pinch-zoom
 
-This Project has been forked to be updated to work with Angular versions 19 and 20.
+[![Angular](https://img.shields.io/badge/Angular-20-red.svg)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 
-# Pinch zoom for Angular
+An Angular library for pinch-to-zoom functionality on touch-enabled devices and mouse interactions. Built with Angular 20+ and modern signals API.
 
-The module provides opportunities for image zooming in, zooming out and positioning with use of gestures on a touch screen.
+## Features
+
+- 🎯 **Angular 20+ with Signals** - Modern reactive programming
+- 📱 **Touch & Mouse Support** - Works on all devices
+- 🔄 **Pinch to Zoom** - Natural gesture support
+- 🖱️ **Mouse Wheel Zoom** - Desktop-friendly
+- 👆 **Double Tap** - Quick zoom in/out
+- 🎨 **Highly Configurable** - Extensive options
+- 📦 **Standalone Component** - No module imports needed
+- ⚡ **Performance Optimized** - Uses signals for reactivity
 
 ## Installation
 
-Install the npm package.
-
-```
-npm i @meddv/ngx-pinch-zoom
+```bash
+npm install @meddv/ngx-pinch-zoom
 ```
 
-Import module:
+## Quick Start
 
-```ts
+### 1. Import the Component
+
+```typescript
+import { Component } from '@angular/core';
 import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
 
-@NgModule({
-    imports: [ PinchZoomComponent ]
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [PinchZoomComponent],
+  template: `
+    <pinch-zoom>
+      <img src="path/to/image.jpg" alt="Zoomable image" />
+    </pinch-zoom>
+  `
 })
+export class AppComponent {}
 ```
 
-## Usage
+### 2. Add Viewport Meta Tag
 
-For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay attention to the parameters of your viewport metatag. If you use Pinch Zoom, it is required to limit zooming of a web-page, by entering the following parameters: &lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"&gt;.
+For proper touch support, add this to your `index.html`:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+```
+
+## Usage Examples
+
+### Basic Usage
 
 ```html
 <pinch-zoom>
-    <img src="path_to_image" />
+  <img src="image.jpg" />
 </pinch-zoom>
 ```
 
-## Properties
+### With Configuration (Using Signals)
 
-| name                | type                          | default               | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------- | ----------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| transition-duration | number                        | 200                   | Defines the speed of the animation of positioning and transforming.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| limit-zoom          | number, "original image size" | "original image size" | Limit the maximum available scale. By default, the maximum scale is calculated based on the original image size.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| minScale            | number                        | 0                     | Limit the minimum acceptable scale. With a value of 1, it is recommended to use this parameter with `limitPan`                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| auto-zoom-out       | boolean                       | false                 | Automatic restoration of the original size of an image after its zooming in by two fingers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| double-tap          | boolean                       | true                  | Zooming in and zooming out of an image, depending on its current condition, with double tap.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| disabled            | boolean                       | false                 | Disable zoom.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| disablePan          | boolean                       | false                 | Turn off panning with one finger.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| overflow            | "hidden", "visible"           | "hidden"              | `hidden` - the overflow is clipped, and the rest of the content will be invisible. `visible` - the overflow is not clipped. The content renders outside the element's box.                                                                                                                                                                                                                                                                                                                                                                                                   |
-| disableZoomControl  | "disable", "never", "auto"    | "auto"                | Disable zoom controls. `auto` - Disable zoom controls on touch screen devices. `never` - show zoom controls on all devices. `disable` - disable zoom controls on all devices.                                                                                                                                                                                                                                                                                                                                                                                                |
-| zoomControlScale    | number                        | 1                     | Zoom factor when using zoom controls.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| backgroundColor     | string                        | "rgba(0,0,0,0.85)"    | The background color of the container.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| limitPan            | boolean                       | false                 | Stop panning when the edge of the image reaches the edge of the screen.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| minPanScale         | number                        | 1.0001                | Minimum zoom at which panning is enabled.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| listeners           | "auto", "mouse and touch"     | "mouse and touch"     | By default, subscriptions are made for mouse and touch screen events. The value `auto` means that the subscription will be only for touch events or only for mouse events, depending on the type of screen.                                                                                                                                                                                                                                                                                                                                                                  |
-| wheel               | boolean                       | true                  | Scale with the mouse wheel.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| wheelZoomFactor     | number                        | 0.2                   | Zoom factor when zoomed in with the mouse wheel.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| autoHeight          | boolean                       | false                 | Calculate the height of the container based on the `width` and `height` attributes of the image. By default, the width of the container is 100%, and the height is determined after the image information is loaded - this may cause a delay in determining the height of the container. If you want the container to initially have dimensions corresponding to the dimensions of the image, then specify the attributes `width` and `height` for the `<img>` tag. When setting the property value to `true`, a subscription to the window resize listener will be created. |
-| draggableImage      | boolean                       | false                 | Sets the attribute `draggable` to the `<img>` tag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| draggableOnPinch    | boolean                       | false                 | When set to `true` content can be moved around while touching or pinching with two fingers.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+```typescript
+import { Component, signal } from '@angular/core';
+import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+
+@Component({
+  selector: 'app-example',
+  standalone: true,
+  imports: [PinchZoomComponent],
+  template: `
+    <pinch-zoom
+      [transitionDuration]="200"
+      [doubleTap]="true"
+      [limitZoom]="3"
+      [autoZoomOut]="false"
+      [disabled]="isDisabled()"
+      (zoomChanged)="onZoomChange($event)">
+      <img src="image.jpg" />
+    </pinch-zoom>
+  `
+})
+export class ExampleComponent {
+  isDisabled = signal(false);
+
+  onZoomChange(scale: number) {
+    console.log('Current zoom level:', scale);
+  }
+}
+```
+
+### Programmatic Control
+
+```typescript
+import { Component, viewChild } from '@angular/core';
+import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+
+@Component({
+  selector: 'app-controls',
+  standalone: true,
+  imports: [PinchZoomComponent],
+  template: `
+    <pinch-zoom #pinchZoom>
+      <img src="image.jpg" />
+    </pinch-zoom>
+
+    <button (click)="zoomIn()">Zoom In</button>
+    <button (click)="zoomOut()">Zoom Out</button>
+    <button (click)="reset()">Reset</button>
+  `
+})
+export class ControlsComponent {
+  pinchZoom = viewChild<PinchZoomComponent>('pinchZoom');
+
+  zoomIn() {
+    this.pinchZoom()?.zoomIn(0.5);
+  }
+
+  zoomOut() {
+    this.pinchZoom()?.zoomOut(0.5);
+  }
+
+  reset() {
+    this.pinchZoom()?.toggleZoom();
+  }
+}
+```
+
+## Configuration Options
+
+| Input | Type | Default | Description |
+|-------|------|---------|-------------|
+| `transitionDuration` | `number` | `200` | Animation duration in milliseconds |
+| `doubleTap` | `boolean` | `true` | Enable double-tap to zoom |
+| `doubleTapScale` | `number` | `2` | Scale factor for double-tap zoom |
+| `autoZoomOut` | `boolean` | `false` | Automatically reset zoom after pinch |
+| `limitZoom` | `number \| 'original image size'` | `'original image size'` | Maximum zoom level |
+| `minScale` | `number` | `0` | Minimum allowed scale |
+| `disabled` | `boolean` | `false` | Disable all zoom functionality |
+| `disablePan` | `boolean` | `false` | Disable panning with one finger |
+| `disableZoomControl` | `'disable' \| 'never' \| 'auto'` | `'auto'` | Control zoom button visibility |
+| `overflow` | `'hidden' \| 'visible'` | `'hidden'` | CSS overflow behavior |
+| `zoomControlScale` | `number` | `1` | Scale factor for zoom controls |
+| `backgroundColor` | `string` | `'rgba(0,0,0,0.85)'` | Container background color |
+| `limitPan` | `boolean` | `false` | Prevent panning past image edges |
+| `minPanScale` | `number` | `1.0001` | Minimum scale at which panning is enabled |
+| `listeners` | `'auto' \| 'mouse and touch'` | `'mouse and touch'` | Event listener mode |
+| `wheel` | `boolean` | `true` | Enable mouse wheel zoom |
+| `wheelZoomFactor` | `number` | `0.2` | Zoom factor for mouse wheel |
+| `autoHeight` | `boolean` | `false` | Calculate height from image dimensions |
+| `draggableImage` | `boolean` | `false` | Make image draggable |
+| `draggableOnPinch` | `boolean` | `false` | Allow dragging while pinching |
 
 ## Outputs
 
-| name        | description                                    |
-| ----------- | ---------------------------------------------- |
-| zoomChanged | Emits current `scale: number` if it's changed. |
+| Output | Type | Description |
+|--------|------|-------------|
+| `zoomChanged` | `OutputEmitterRef<number>` | Emits current scale when zoom changes |
 
 ## Methods
 
-| name                   | description                                                                                  |
-| ---------------------- | -------------------------------------------------------------------------------------------- |
-| toggleZoom()           | Image zooming in and out, depending on its current state.                                    |
-| zoomIn(value: number)  | Zoom in by `value`, respects `limit-zoom` option. Returns `scale: number`.                   |
-| zoomOut(value: number) | Zoom out by `value`, respects `minScale` option. Returns `scale: number`.                    |
-| destroy()              | Unsubscribe from mouse events and touches, as well as remove added styles from the DOM tree. |
+Access these methods via template reference or `viewChild`:
 
-## Contributor services
+| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| `toggleZoom()` | - | `void` | Toggle between zoomed in/out |
+| `zoomIn(value)` | `value: number` | `number` | Zoom in by value, returns new scale |
+| `zoomOut(value)` | `value: number` | `number` | Zoom out by value, returns new scale |
+| `destroy()` | - | `void` | Clean up event listeners |
 
-Contact us over our Issue Tracker.
+## Computed Properties
+
+The component exposes several computed signals:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `scale()` | `number` | Current zoom scale |
+| `isZoomedIn()` | `boolean` | Whether image is zoomed in |
+| `isDisabled()` | `boolean` | Whether zoom is disabled |
+| `isDragging()` | `boolean` | Whether user is currently dragging |
+| `isZoomLimitReached()` | `boolean` | Whether max zoom is reached |
+| `maxScale()` | `number` | Maximum allowed scale |
+| `isControl()` | `boolean` | Whether zoom controls should be shown |
+
+## Angular 20 Signals
+
+This library fully embraces Angular 20's signals API:
+
+### Input Signals
+All component inputs are now signal-based for better performance and reactivity.
+
+```typescript
+// Before (Angular <16)
+@Input() disabled: boolean = false;
+
+// Now (Angular 20+)
+disabled = input<boolean>(false);
+```
+
+### Output Signals
+Outputs use the new output() API:
+
+```typescript
+// Before
+@Output() zoomChanged = new EventEmitter<number>();
+
+// Now
+zoomChanged = output<number>();
+```
+
+### Computed Signals
+Derived state uses computed signals:
+
+```typescript
+isZoomedIn = computed<boolean>(() => {
+  return this.scale() > 1;
+});
+```
+
+## Browser Support
+
+- Chrome/Edge (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+- iOS Safari (latest 2 versions)
+- Chrome for Android (latest 2 versions)
+
+## Requirements
+
+- Angular 20.0.0 or higher
+- TypeScript 5.8.0 or higher
+- Node.js 18.19.1, 20.11.1, or 22.0.0+
+
+## Migration from Older Versions
+
+If you're upgrading from a pre-signals version:
+
+1. **Inputs**: No changes needed in templates, binding syntax remains the same
+2. **Outputs**: Event binding syntax remains the same
+3. **ViewChild**: Update to `viewChild` signal (optional but recommended)
+4. **Component properties**: Access computed properties by calling them: `component.scale()`
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+## License
+
+MIT
+
+## Credits
+
+This project was forked and modernized for Angular 19/20 compatibility.
+
+Original library: [ngx-pinch-zoom](https://github.com/drozhzhin-n-e/ngx-pinch-zoom)
+
+## Issues and Support
+
+Please report issues on [GitHub Issues](https://github.com/yourusername/ngx-pinch-zoom/issues)
