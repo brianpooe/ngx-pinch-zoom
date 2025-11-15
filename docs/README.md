@@ -129,24 +129,29 @@ docs/
 
 ### The Big Picture
 
-```
-User touches screen
-    ↓
-Browser fires touch events
-    ↓
-Touches class detects gestures (pinch, pan, tap)
-    ↓
-IvyPinch calculates transform (scale, moveX, moveY)
-    ↓
-IvyPinch applies CSS transform to DOM
-    ↓
-Browser renders transformed image
-    ↓
-IvyPinch calls callback
-    ↓
-PinchZoomComponent updates signals
-    ↓
-Angular updates UI (if needed)
+```mermaid
+flowchart TD
+    A[User touches screen]:::userStyle
+    B[Browser fires touch events]:::browserStyle
+    C[Touches detects gestures<br/>pinch, pan, tap]:::touchStyle
+    D[IvyPinch calculates transform<br/>scale, moveX, moveY]:::calcStyle
+    E[IvyPinch applies<br/>CSS transform to DOM]:::domStyle
+    F[Browser renders<br/>transformed image]:::renderStyle
+    G[IvyPinch calls callback]:::callbackStyle
+    H[PinchZoomComponent<br/>updates signals]:::signalStyle
+    I[Angular updates UI<br/>if needed]:::uiStyle
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I
+
+    classDef userStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef browserStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef touchStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef calcStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef domStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef renderStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef callbackStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef signalStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef uiStyle fill:#3fb950,stroke:#56d364,color:#fff
 ```
 
 ### Key Concepts to Understand
@@ -212,44 +217,73 @@ Check: QUICK_REFERENCE.md → "Common Gotchas"
 
 ### Component Hierarchy
 
-```
-PinchZoomComponent (Angular)
-    │
-    ├─→ Template Projection (<ng-content>)
-    │   └─→ User's image/content
-    │
-    ├─→ IvyPinch (Core Logic)
-    │   └─→ Touches (Event Handling)
-    │
-    └─→ Signals (Reactivity)
-        ├─→ Input signals (configuration)
-        ├─→ Internal signals (state)
-        ├─→ Computed signals (derived)
-        └─→ Output signals (events)
+```mermaid
+graph TD
+    Root[PinchZoomComponent<br/>Angular Component]:::componentStyle
+
+    Template[Template Projection<br/>ng-content]:::templateStyle
+    Content[User's image/content]:::contentStyle
+
+    Logic[IvyPinch<br/>Core Logic]:::logicStyle
+    Events[Touches<br/>Event Handling]:::eventStyle
+
+    Signals[Signals<br/>Reactivity]:::signalStyle
+    InputSig[Input signals<br/>configuration]:::inputStyle
+    InternalSig[Internal signals<br/>state]:::stateStyle
+    ComputedSig[Computed signals<br/>derived]:::computedStyle
+    OutputSig[Output signals<br/>events]:::outputStyle
+
+    Root --> Template
+    Template --> Content
+
+    Root --> Logic
+    Logic --> Events
+
+    Root --> Signals
+    Signals --> InputSig
+    Signals --> InternalSig
+    Signals --> ComputedSig
+    Signals --> OutputSig
+
+    classDef componentStyle fill:#58a6ff,stroke:#79c0ff,color:#fff,stroke-width:3px
+    classDef templateStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef contentStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef logicStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef eventStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef signalStyle fill:#58a6ff,stroke:#79c0ff,color:#fff,stroke-width:2px
+    classDef inputStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef stateStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef computedStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef outputStyle fill:#db61a2,stroke:#f778ba,color:#fff
 ```
 
 ### Data Flow
 
-```
-Configuration (inputs)
-    ↓
-mergedProperties (computed signal)
-    ↓
-IvyPinch initialization
-    ↓
-User gesture
-    ↓
-Touches detection
-    ↓
-IvyPinch calculation
-    ↓
-CSS transform update
-    ↓
-Scale callback
-    ↓
-Component signal update
-    ↓
-Output event emission
+```mermaid
+flowchart TD
+    A[Configuration<br/>inputs]:::configStyle
+    B[mergedProperties<br/>computed signal]:::computedStyle
+    C[IvyPinch<br/>initialization]:::initStyle
+    D[User gesture]:::userStyle
+    E[Touches<br/>detection]:::detectionStyle
+    F[IvyPinch<br/>calculation]:::calcStyle
+    G[CSS transform<br/>update]:::transformStyle
+    H[Scale<br/>callback]:::callbackStyle
+    I[Component signal<br/>update]:::signalStyle
+    J[Output event<br/>emission]:::outputStyle
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I --> J
+
+    classDef configStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef computedStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef initStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef userStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef detectionStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef calcStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef transformStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef callbackStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef signalStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef outputStyle fill:#db61a2,stroke:#f778ba,color:#fff
 ```
 
 ## 📝 Documentation Maintenance
