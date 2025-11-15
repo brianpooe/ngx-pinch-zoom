@@ -12,6 +12,7 @@ An Angular library for pinch-to-zoom functionality on touch-enabled devices and 
 - 🔄 **Pinch to Zoom** - Natural gesture support
 - 🖱️ **Mouse Wheel Zoom** - Desktop-friendly
 - 👆 **Double Tap** - Quick zoom in/out
+- 🎯 **Click to Zoom** - Click any point to zoom in precisely
 - ☀️ **Brightness Control** - Adjust image brightness on the fly
 - 🎨 **Highly Configurable** - Extensive options
 - 📦 **Standalone Component** - No module imports needed
@@ -131,6 +132,39 @@ export class ControlsComponent {
 }
 ```
 
+### Click to Zoom
+
+Enable click-to-zoom for quick inspection of specific areas:
+
+```typescript
+import { Component } from '@angular/core';
+import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+
+@Component({
+    selector: 'app-click-zoom',
+    standalone: true,
+    imports: [PinchZoomComponent],
+    template: `
+        <pinch-zoom [enableClickToZoom]="true" [clickToZoomScale]="2.5">
+            <img src="image.jpg" />
+        </pinch-zoom>
+    `,
+})
+export class ClickZoomComponent {}
+```
+
+This is particularly useful for:
+
+- **Anomaly detection** - Click on suspicious areas to zoom in
+- **Defect inspection** - Quickly examine specific spots
+- **Detail review** - Fast workflow for inspecting multiple points
+
+When enabled:
+
+- Click any point on the image to zoom to that exact location
+- Click again to zoom out back to original view
+- Cursor changes to zoom-in icon to indicate the feature is active
+
 ### Brightness Control
 
 Enable brightness controls alongside zoom controls:
@@ -227,6 +261,8 @@ export class BrightnessControlsComponent {
 | `brightnessStep`          | `number`                          | `0.1`                   | Brightness adjustment increment           |
 | `minBrightness`           | `number`                          | `0.1`                   | Minimum brightness value                  |
 | `maxBrightness`           | `number`                          | `2.0`                   | Maximum brightness value                  |
+| `enableClickToZoom`       | `boolean`                         | `false`                 | Enable click-to-zoom functionality        |
+| `clickToZoomScale`        | `number`                          | `2.5`                   | Target scale when clicking to zoom        |
 
 ## Outputs
 
@@ -239,15 +275,16 @@ export class BrightnessControlsComponent {
 
 Access these methods via template reference or `viewChild`:
 
-| Method              | Parameters      | Returns  | Description                                         |
-| ------------------- | --------------- | -------- | --------------------------------------------------- |
-| `toggleZoom()`      | -               | `void`   | Toggle between zoomed in/out                        |
-| `zoomIn(value)`     | `value: number` | `number` | Zoom in by value, returns new scale                 |
-| `zoomOut(value)`    | `value: number` | `number` | Zoom out by value, returns new scale                |
-| `brightnessIn()`    | -               | `number` | Increase brightness by step, returns new brightness |
-| `brightnessOut()`   | -               | `number` | Decrease brightness by step, returns new brightness |
-| `resetBrightness()` | -               | `void`   | Reset brightness to default (1.0)                   |
-| `destroy()`         | -               | `void`   | Clean up event listeners                            |
+| Method               | Parameters          | Returns  | Description                                         |
+| -------------------- | ------------------- | -------- | --------------------------------------------------- |
+| `toggleZoom()`       | -                   | `void`   | Toggle between zoomed in/out                        |
+| `zoomIn(value)`      | `value: number`     | `number` | Zoom in by value, returns new scale                 |
+| `zoomOut(value)`     | `value: number`     | `number` | Zoom out by value, returns new scale                |
+| `brightnessIn()`     | -                   | `number` | Increase brightness by step, returns new brightness |
+| `brightnessOut()`    | -                   | `number` | Decrease brightness by step, returns new brightness |
+| `resetBrightness()`  | -                   | `void`   | Reset brightness to default (1.0)                   |
+| `zoomToPoint(event)` | `event: MouseEvent` | `void`   | Zoom to the clicked point (used internally)         |
+| `destroy()`          | -                   | `void`   | Clean up event listeners                            |
 
 ## Computed Properties
 

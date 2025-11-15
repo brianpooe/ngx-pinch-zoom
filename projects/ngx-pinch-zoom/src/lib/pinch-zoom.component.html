@@ -1,4 +1,9 @@
-<div class="pinch-zoom-content" [class.pz-dragging]="isDragging()">
+<div
+    class="pinch-zoom-content"
+    [class.pz-dragging]="isDragging()"
+    [class.pz-click-to-zoom]="enableClickToZoom()"
+    (click)="enableClickToZoom() ? zoomToPoint($event) : null"
+>
     <ng-content></ng-content>
 </div>
 
