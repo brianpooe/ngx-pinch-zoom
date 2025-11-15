@@ -1,4 +1,4 @@
-<div class="pinch-zoom-content" [class.pz-dragging]="isDragging">
+<div class="pinch-zoom-content" [class.pz-dragging]="isDragging()">
   <ng-content></ng-content>
 </div>
 
@@ -6,7 +6,12 @@
 @if (isControl()) {
   <div
     class="pz-zoom-button pz-zoom-control-position-bottom"
-    [class.pz-zoom-button-out]="isZoomedIn"
+    [class.pz-zoom-button-out]="isZoomedIn()"
     (click)="toggleZoom()"
+    (keydown.enter)="toggleZoom()"
+    (keydown.space)="toggleZoom(); $event.preventDefault()"
+    role="button"
+    [attr.aria-label]="isZoomedIn() ? 'Zoom out' : 'Zoom in'"
+    tabindex="0"
   ></div>
 }

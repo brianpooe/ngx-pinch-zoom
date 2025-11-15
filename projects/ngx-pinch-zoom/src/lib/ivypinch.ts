@@ -11,7 +11,7 @@ export class IvyPinch {
     public scale: number = 1;
     private initialScale: number = 1;
     private elementPosition!: DOMRect;
-    private eventType!: EventType;
+    private eventType: EventType = undefined;
     private startX: number = 0;
     private startY: number = 0;
     private moveX: number = 0;
@@ -22,8 +22,8 @@ export class IvyPinch {
     private moveYC: number = 0;
     private distance: number = 0;
     private initialDistance: number = 0;
-    public maxScale!: number;
     private defaultMaxScale: number = 3;
+    public maxScale: number = this.defaultMaxScale;
     private initialPinchCenterX = 0;
     private initialPinchCenterY = 0;
     private zoomChanged: (scale: number) => void;
@@ -38,12 +38,12 @@ export class IvyPinch {
     }
 
     constructor(properties: Properties, zoomChanged: (scale: number) => void) {
-        this.element = properties.element!;
-        this.zoomChanged = zoomChanged;
-
-        if (!this.element) {
-            return;
+        if (!properties.element) {
+            throw new Error('IvyPinch: element property is required');
         }
+
+        this.element = properties.element;
+        this.zoomChanged = zoomChanged;
 
         if (typeof properties.limitZoom === 'number') {
             this.maxScale = properties.limitZoom;
