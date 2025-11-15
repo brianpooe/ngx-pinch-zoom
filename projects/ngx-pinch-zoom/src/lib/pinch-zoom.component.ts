@@ -66,11 +66,19 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     draggableImage = input<boolean>(defaultProperties.draggableImage!);
     draggableOnPinch = input<boolean>(defaultProperties.draggableOnPinch!);
 
-    // Output signal
+    // Brightness control inputs
+    enableBrightnessControl = input<boolean>(false);
+    brightnessStep = input<number>(0.1);
+    minBrightness = input<number>(0.1);
+    maxBrightness = input<number>(2.0);
+
+    // Output signals
     zoomChanged = output<number>();
+    brightnessChanged = output<number>();
 
     // Internal signals
     private currentScale = signal<number>(1);
+    private currentBrightness = signal<number>(1.0);
 
     // Computed signals for reactive properties
     mergedProperties = computed<ComponentProperties>(() => {
@@ -173,6 +181,26 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
         return true;
     });
 
+    // Brightness computed signals
+    brightness = computed<number>(() => {
+        return this.currentBrightness();
+    });
+
+    isBrightnessControl = computed<boolean>(() => {
+        if (this.isDisabled()) {
+            return false;
+        }
+        return this.enableBrightnessControl();
+    });
+
+    isBrightnessAtMin = computed<boolean>(() => {
+        return this.brightness() <= this.minBrightness();
+    });
+
+    isBrightnessAtMax = computed<boolean>(() => {
+        return this.brightness() >= this.maxBrightness();
+    });
+
     constructor() {
         this.defaultComponentProperties = this.getDefaultComponentProperties();
 
@@ -182,6 +210,15 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
             if (this.pinchZoom && !props.disabled) {
                 // Properties have changed, reinitialize if needed
                 this.detectLimitZoom();
+            }
+        });
+
+        // Effect to apply brightness filter
+        effect(() => {
+            const brightness = this.brightness();
+            const element = this.elementRef.nativeElement.querySelector('.pinch-zoom-content') as HTMLElement;
+            if (element) {
+                element.style.filter = `brightness(${brightness})`;
             }
         });
     }
@@ -229,6 +266,31 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 
     zoomOut(value: number): number {
         return this.pinchZoom?.zoomOut(value) || this.scale();
+    }
+
+    brightnessIn(): number {
+        const newBrightness = Math.min(
+            this.brightness() + this.brightnessStep(),
+            this.maxBrightness()
+        );
+        this.currentBrightness.set(newBrightness);
+        this.brightnessChanged.emit(newBrightness);
+        return newBrightness;
+    }
+
+    brightnessOut(): number {
+        const newBrightness = Math.max(
+            this.brightness() - this.brightnessStep(),
+            this.minBrightness()
+        );
+        this.currentBrightness.set(newBrightness);
+        this.brightnessChanged.emit(newBrightness);
+        return newBrightness;
+    }
+
+    resetBrightness(): void {
+        this.currentBrightness.set(1.0);
+        this.brightnessChanged.emit(1.0);
     }
 
     detectLimitZoom(): void {
