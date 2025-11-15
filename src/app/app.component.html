@@ -6,7 +6,7 @@
         <h2>transition-duration: 1000</h2>
         <p>Defines the speed of the animation of positioning and transforming.</p>
         <p>Zoom State: {{ this.zoomstate }}</p>
-        <pinch-zoom [transition-duration]="1000" (zoomChanged)="onZoomChanged($event)">
+        <pinch-zoom [transitionDuration]="1000" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
@@ -18,7 +18,7 @@
         <h2>limit-zoom: 2</h2>
         <p>Limit the maximum available scale. By default, the maximum scale is calculated based on the original image size.</p>
         <p>Zoom State: {{ this.zoomstate }}</p>
-        <pinch-zoom [limit-zoom]="2" (zoomChanged)="onZoomChanged($event)">
+        <pinch-zoom [limitZoom]="2" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
@@ -42,7 +42,7 @@
         <h2>auto-zoom-out: true</h2>
         <p>Automatic restoration of the original size of an image after its zooming in by two fingers.</p>
         <p>Zoom State: {{ this.zoomstate }}</p>
-        <pinch-zoom [auto-zoom-out]="true" (zoomChanged)="onZoomChanged($event)">
+        <pinch-zoom [autoZoomOut]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
@@ -54,7 +54,7 @@
         <h2>double-tap: false</h2>
         <p>Zooming in and zooming out of an image, depending on its current condition, with double tap.</p>
         <p>Zoom State: {{ this.zoomstate }}</p>
-        <pinch-zoom [double-tap]="false" (zoomChanged)="onZoomChanged($event)">
+        <pinch-zoom [doubleTap]="false" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
@@ -66,7 +66,7 @@
         <h2>double-tap-scale: 4</h2>
         <p>Double tap scaling factor.</p>
         <p>Zoom State: {{ this.zoomstate }}</p>
-        <pinch-zoom [double-tap-scale]="4" (zoomChanged)="onZoomChanged($event)">
+        <pinch-zoom [doubleTapScale]="4" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
@@ -250,6 +250,98 @@
         <h2>draggableOnPinch: true</h2>
         <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [draggableOnPinch]="true" (zoomChanged)="onZoomChanged($event)">
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- enableClickToZoom -->
+    <div class="demo">
+        <h2>enableClickToZoom: true</h2>
+        <p>
+            Click any point on the image to zoom to that exact location. Perfect for anomaly detection and defect inspection. Click again to
+            zoom out.
+        </p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
+        <pinch-zoom [enableClickToZoom]="true" (zoomChanged)="onZoomChanged($event)">
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- clickToZoomScale -->
+    <div class="demo">
+        <h2>clickToZoomScale: 3.5</h2>
+        <p>Target zoom level when clicking to zoom. Default is 2.5x.</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
+        <pinch-zoom [enableClickToZoom]="true" [clickToZoomScale]="3.5" (zoomChanged)="onZoomChanged($event)">
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- enableBrightnessControl -->
+    <div class="demo">
+        <h2>enableBrightnessControl: true</h2>
+        <p>
+            Enable brightness controls alongside zoom controls. Perfect for brightening dark images or examining details in shadows.
+            Controls appear at the bottom center of the image.
+        </p>
+        <p>Brightness State: {{ this.brightnessstate.toFixed(2) }}</p>
+        <pinch-zoom [enableBrightnessControl]="true" (brightnessChanged)="onBrightnessChanged($event)">
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- brightnessStep -->
+    <div class="demo">
+        <h2>brightnessStep: 0.2</h2>
+        <p>Brightness adjustment increment. Larger steps for faster adjustments. Default is 0.1.</p>
+        <p>Brightness State: {{ this.brightnessstate.toFixed(2) }}</p>
+        <pinch-zoom [enableBrightnessControl]="true" [brightnessStep]="0.2" (brightnessChanged)="onBrightnessChanged($event)">
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- minBrightness & maxBrightness -->
+    <div class="demo">
+        <h2>minBrightness: 0.5, maxBrightness: 1.5</h2>
+        <p>Limit the brightness range. Default range is 0.1 to 2.0.</p>
+        <p>Brightness State: {{ this.brightnessstate.toFixed(2) }}</p>
+        <pinch-zoom
+            [enableBrightnessControl]="true"
+            [minBrightness]="0.5"
+            [maxBrightness]="1.5"
+            (brightnessChanged)="onBrightnessChanged($event)"
+        >
+            <img
+                src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
+            />
+        </pinch-zoom>
+    </div>
+
+    <!-- Combined: Click-to-zoom + Brightness -->
+    <div class="demo">
+        <h2>Combined: Click-to-zoom + Brightness Control</h2>
+        <p>
+            Perfect for defect inspection and anomaly detection workflows. Click to zoom in on suspicious areas, adjust brightness to see
+            details.
+        </p>
+        <p>Zoom State: {{ this.zoomstate }} | Brightness State: {{ this.brightnessstate.toFixed(2) }}</p>
+        <pinch-zoom
+            [enableClickToZoom]="true"
+            [clickToZoomScale]="2.5"
+            [enableBrightnessControl]="true"
+            (zoomChanged)="onZoomChanged($event)"
+            (brightnessChanged)="onBrightnessChanged($event)"
+        >
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
             />
