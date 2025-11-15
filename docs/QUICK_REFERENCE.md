@@ -17,11 +17,11 @@ Fast lookup reference for ngx-pinch-zoom maintainers. For detailed explanations,
 
 ### The Three Core Classes
 
-| Class | Location | Purpose | Dependencies |
-|-------|----------|---------|--------------|
-| **PinchZoomComponent** | `pinch-zoom.component.ts` | Angular component wrapper | Angular Core |
-| **IvyPinch** | `ivypinch.ts` | Core zoom/pan logic | None (pure TS) |
-| **Touches** | `touches.ts` | Event detection & handling | None (pure TS) |
+| Class                  | Location                  | Purpose                    | Dependencies   |
+| ---------------------- | ------------------------- | -------------------------- | -------------- |
+| **PinchZoomComponent** | `pinch-zoom.component.ts` | Angular component wrapper  | Angular Core   |
+| **IvyPinch**           | `ivypinch.ts`             | Core zoom/pan logic        | None (pure TS) |
+| **Touches**            | `touches.ts`              | Event detection & handling | None (pure TS) |
 
 ### Data Flow
 
@@ -52,27 +52,30 @@ transform: translate3d(${moveX}px, ${moveY}px, 0) scale(${scale})
 
 ### Where to Find Things
 
-| What | File | Line Range | Purpose |
-|------|------|------------|---------|
-| Input signals | `pinch-zoom.component.ts` | ~47-70 | Component configuration |
-| Computed signals | `pinch-zoom.component.ts` | ~78-120 | Derived state |
-| Pinch handling | `ivypinch.ts` | ~300-400 | Pinch zoom logic |
-| Pan handling | `ivypinch.ts` | ~400-500 | Pan/drag logic |
-| Touch detection | `touches.ts` | ~150-250 | Gesture recognition |
-| Transform application | `ivypinch.ts` | ~600-700 | DOM manipulation |
-| Default properties | `properties.ts` | All | Configuration defaults |
-| Type definitions | `interfaces.ts` | All | TypeScript interfaces |
+| What                  | File                      | Line Range | Purpose                 |
+| --------------------- | ------------------------- | ---------- | ----------------------- |
+| Input signals         | `pinch-zoom.component.ts` | ~47-70     | Component configuration |
+| Computed signals      | `pinch-zoom.component.ts` | ~78-120    | Derived state           |
+| Pinch handling        | `ivypinch.ts`             | ~300-400   | Pinch zoom logic        |
+| Pan handling          | `ivypinch.ts`             | ~400-500   | Pan/drag logic          |
+| Touch detection       | `touches.ts`              | ~150-250   | Gesture recognition     |
+| Transform application | `ivypinch.ts`             | ~600-700   | DOM manipulation        |
+| Default properties    | `properties.ts`           | All        | Configuration defaults  |
+| Type definitions      | `interfaces.ts`           | All        | TypeScript interfaces   |
 
 ### Key Methods by Task
 
-| Task | Method | File | What It Does |
-|------|--------|------|--------------|
-| **User zooms in** | `handlePinch()` | `ivypinch.ts` | Calculates new scale from finger distance |
-| **User pans** | `handleLinearSwipe()` | `ivypinch.ts` | Calculates new position |
-| **Apply changes** | `transformElement()` | `ivypinch.ts` | Updates CSS transform |
-| **Detect pinch** | `detectPinch()` | `touches.ts` | Recognizes 2-finger gesture |
-| **Detect pan** | `detectLinearSwipe()` | `touches.ts` | Recognizes 1-finger drag |
-| **Detect double-tap** | `detectDoubleTap()` | `touches.ts` | Recognizes rapid taps |
+| Task                  | Method                | File                      | What It Does                              |
+| --------------------- | --------------------- | ------------------------- | ----------------------------------------- |
+| **User zooms in**     | `handlePinch()`       | `ivypinch.ts`             | Calculates new scale from finger distance |
+| **User pans**         | `handleLinearSwipe()` | `ivypinch.ts`             | Calculates new position                   |
+| **Apply changes**     | `transformElement()`  | `ivypinch.ts`             | Updates CSS transform                     |
+| **Detect pinch**      | `detectPinch()`       | `touches.ts`              | Recognizes 2-finger gesture               |
+| **Detect pan**        | `detectLinearSwipe()` | `touches.ts`              | Recognizes 1-finger drag                  |
+| **Detect double-tap** | `detectDoubleTap()`   | `touches.ts`              | Recognizes rapid taps                     |
+| **Brightness up**     | `brightnessIn()`      | `pinch-zoom.component.ts` | Increases brightness by step              |
+| **Brightness down**   | `brightnessOut()`     | `pinch-zoom.component.ts` | Decreases brightness by step              |
+| **Reset brightness**  | `resetBrightness()`   | `pinch-zoom.component.ts` | Resets brightness to 1.0                  |
 
 ## Common Patterns
 
@@ -114,6 +117,51 @@ myNewEvent = output<MyEventType>();
 this.myNewEvent.emit(eventData);
 ```
 
+### Adding CSS Filter Effects (Brightness Example)
+
+```typescript
+// 1. Add input signals for configuration (pinch-zoom.component.ts)
+enableBrightnessControl = input<boolean>(false);
+brightnessStep = input<number>(0.1);
+
+// 2. Add internal signal for state
+private currentBrightness = signal<number>(1.0);
+
+// 3. Add computed signal for public access
+brightness = computed<number>(() => {
+    return this.currentBrightness();
+});
+
+// 4. Add control methods
+brightnessIn(): number {
+    const newBrightness = Math.min(
+        this.brightness() + this.brightnessStep(),
+        this.maxBrightness()
+    );
+    this.currentBrightness.set(newBrightness);
+    this.brightnessChanged.emit(newBrightness);
+    return newBrightness;
+}
+
+// 5. Add effect to apply CSS filter (constructor)
+effect(() => {
+    const brightness = this.brightness();
+    const element = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
+    if (element) {
+        element.style.filter = `brightness(${brightness})`;
+    }
+});
+
+// 6. Add UI controls in template
+<!-- In pinch-zoom.component.html -->
+@if (isBrightnessControl()) {
+  <div class="pz-brightness-controls">
+    <button (click)="brightnessIn()">Brighter</button>
+    <button (click)="brightnessOut()">Darker</button>
+  </div>
+}
+```
+
 ### Adding New Gesture Logic
 
 ```typescript
@@ -149,32 +197,48 @@ this.touches.on('my-new-gesture', this.handleMyNewGesture as any);
 ### Input Signals (Configuration from User)
 
 ```typescript
-transitionDuration = input<number>(200);     // Animation speed
-doubleTap = input<boolean>(true);            // Enable double-tap
-limitZoom = input<number>(3);                 // Max zoom level
-disabled = input<boolean>(false);             // Disable all
+// Zoom controls
+transitionDuration = input<number>(200); // Animation speed
+doubleTap = input<boolean>(true); // Enable double-tap
+limitZoom = input<number>(3); // Max zoom level
+disabled = input<boolean>(false); // Disable all
+
+// Brightness controls
+enableBrightnessControl = input<boolean>(false); // Enable brightness UI
+brightnessStep = input<number>(0.1); // Brightness step size
+minBrightness = input<number>(0.1); // Min brightness
+maxBrightness = input<number>(2.0); // Max brightness
 ```
 
 ### Internal Signals (Component State)
 
 ```typescript
-private currentScale = signal<number>(1);     // Current zoom
-private isZooming = signal<boolean>(false);   // Is user zooming
-private isPanning = signal<boolean>(false);   // Is user panning
+private currentScale = signal<number>(1);          // Current zoom
+private currentBrightness = signal<number>(1.0);   // Current brightness
+private isZooming = signal<boolean>(false);        // Is user zooming
+private isPanning = signal<boolean>(false);        // Is user panning
 ```
 
 ### Computed Signals (Derived State)
 
 ```typescript
+// Zoom-related
 isZoomedIn = computed(() => this.scale() > 1);
 maxScale = computed(() => this.calculateMaxScale());
 isControl = computed(() => this.shouldShowControls());
+
+// Brightness-related
+brightness = computed(() => this.currentBrightness());
+isBrightnessControl = computed(() => this.enableBrightnessControl());
+isBrightnessAtMin = computed(() => this.brightness() <= this.minBrightness());
+isBrightnessAtMax = computed(() => this.brightness() >= this.maxBrightness());
 ```
 
 ### Output Signals (Events to User)
 
 ```typescript
-zoomChanged = output<number>();  // Emits when scale changes
+zoomChanged = output<number>(); // Emits when scale changes
+brightnessChanged = output<number>(); // Emits when brightness changes
 ```
 
 ### Signal Effects (Side Effects)
@@ -238,21 +302,25 @@ constructor() {
 ### DO Use
 
 ✅ **CSS Transform** - Hardware accelerated
+
 ```typescript
 element.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
 ```
 
 ✅ **Signals for State** - Fine-grained reactivity
+
 ```typescript
 private currentScale = signal<number>(1);
 ```
 
 ✅ **Computed for Derived Values** - Automatic memoization
+
 ```typescript
 isZoomedIn = computed(() => this.scale() > 1);
 ```
 
 ✅ **translate3d** - Triggers GPU acceleration
+
 ```typescript
 translate3d(${moveX}px, ${moveY}px, 0)  // Force 3D rendering
 ```
@@ -260,17 +328,20 @@ translate3d(${moveX}px, ${moveY}px, 0)  // Force 3D rendering
 ### DON'T Use
 
 ❌ **Position Properties** - Triggers reflow
+
 ```typescript
-element.style.left = `${x}px`;     // Bad!
-element.style.top = `${y}px`;      // Bad!
+element.style.left = `${x}px`; // Bad!
+element.style.top = `${y}px`; // Bad!
 ```
 
 ❌ **Excessive Logging** - Performance cost
+
 ```typescript
-console.log(this.scale);  // Remove in production
+console.log(this.scale); // Remove in production
 ```
 
 ❌ **Change Detection Triggers** - Causes re-renders
+
 ```typescript
 // Avoid calling this repeatedly
 this.cdr.markForCheck();
@@ -407,6 +478,7 @@ flowchart TD
 ### Manual Testing Checklist
 
 #### Basic Functionality
+
 - [ ] Pinch zoom in with 2 fingers
 - [ ] Pinch zoom out with 2 fingers
 - [ ] Pan image when zoomed in
@@ -414,24 +486,37 @@ flowchart TD
 - [ ] Double-tap again to zoom out
 - [ ] Mouse wheel to zoom
 - [ ] Zoom buttons (if enabled)
+- [ ] Brightness controls (if enabled)
+- [ ] Increase brightness button
+- [ ] Decrease brightness button
 
 #### Edge Cases
+
 - [ ] Zoom in beyond max limit
 - [ ] Zoom out beyond min limit
 - [ ] Pan beyond image edges (with limitPan)
 - [ ] Rapid zoom in/out
 - [ ] Change orientation while zoomed
 - [ ] Multiple rapid double-taps
+- [ ] Brightness at minimum (controls disabled)
+- [ ] Brightness at maximum (controls disabled)
+- [ ] Rapid brightness adjustments
 
 #### Configuration Tests
+
 - [ ] Set `disabled=true` → all gestures disabled
 - [ ] Set `disablePan=true` → cannot pan
 - [ ] Set `doubleTap=false` → no double-tap
 - [ ] Set `limitZoom=2` → stops at 2x
 - [ ] Set `autoZoomOut=true` → resets after pinch
 - [ ] Set `wheel=false` → mouse wheel disabled
+- [ ] Set `enableBrightnessControl=true` → shows brightness controls
+- [ ] Set `brightnessStep=0.2` → larger brightness steps
+- [ ] Set `minBrightness=0.5` → stops at 0.5 minimum
+- [ ] Set `maxBrightness=1.5` → stops at 1.5 maximum
 
 #### Performance Tests
+
 - [ ] Large image (>5MB) zooms smoothly
 - [ ] Rapid gestures don't lag
 - [ ] No memory leaks after destroy
@@ -455,19 +540,19 @@ npm run format:check
 
 ## File Size Reference
 
-| File | Lines | Complexity |
-|------|-------|------------|
-| `pinch-zoom.component.ts` | ~200 | Medium |
-| `ivypinch.ts` | ~800 | High |
-| `touches.ts` | ~500 | High |
-| `interfaces.ts` | ~30 | Low |
-| `properties.ts` | ~40 | Low |
+| File                      | Lines | Complexity |
+| ------------------------- | ----- | ---------- |
+| `pinch-zoom.component.ts` | ~200  | Medium     |
+| `ivypinch.ts`             | ~800  | High       |
+| `touches.ts`              | ~500  | High       |
+| `interfaces.ts`           | ~30   | Low        |
+| `properties.ts`           | ~40   | Low        |
 
 ## Version Compatibility
 
 | Library Version | Angular Version | TypeScript Version |
-|----------------|-----------------|-------------------|
-| 20.0.0 | 20.0.0+ | 5.8.0+ |
+| --------------- | --------------- | ------------------ |
+| 20.0.0          | 20.0.0+         | 5.8.0+             |
 
 ---
 
