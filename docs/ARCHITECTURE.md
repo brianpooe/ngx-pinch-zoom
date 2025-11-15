@@ -77,42 +77,44 @@ graph TB
 ### Design Principles
 
 1. **Separation of Concerns**
-   - **PinchZoomComponent**: Angular integration, signals, lifecycle
-   - **IvyPinch**: Pure business logic, no Angular dependencies
-   - **Touches**: Pure event handling, no Angular dependencies
+    - **PinchZoomComponent**: Angular integration, signals, lifecycle
+    - **IvyPinch**: Pure business logic, no Angular dependencies
+    - **Touches**: Pure event handling, no Angular dependencies
 
 2. **Signal-Based Reactivity**
-   - All inputs use Angular 20+ input signals
-   - Computed signals for derived state
-   - Output signals for events
-   - Effects for side effects
+    - All inputs use Angular 20+ input signals
+    - Computed signals for derived state
+    - Output signals for events
+    - Effects for side effects
 
 3. **Framework Independence**
-   - IvyPinch and Touches can work without Angular
-   - Could be ported to React, Vue, or vanilla JS
-   - DOM manipulation is isolated
+    - IvyPinch and Touches can work without Angular
+    - Could be ported to React, Vue, or vanilla JS
+    - DOM manipulation is isolated
 
 4. **Performance First**
-   - CSS transforms for hardware acceleration
-   - `translate3d` forces GPU rendering
-   - No layout thrashing (read/write separation)
-   - Minimal change detection triggers
+    - CSS transforms for hardware acceleration
+    - `translate3d` forces GPU rendering
+    - No layout thrashing (read/write separation)
+    - Minimal change detection triggers
 
 ## Component Architecture
 
 ### PinchZoomComponent (Angular Layer)
 
 **Responsibilities:**
+
 - Provide Angular component interface
 - Manage input/output signals
 - Initialize and cleanup IvyPinch
 - Bridge between Angular and core logic
 
 **Key Features:**
+
 ```typescript
 @Component({
     selector: 'pinch-zoom, [pinch-zoom]',
-    standalone: true,  // No NgModule needed
+    standalone: true, // No NgModule needed
     // ...
 })
 export class PinchZoomComponent {
@@ -143,6 +145,7 @@ export class PinchZoomComponent {
 ### IvyPinch (Core Logic Layer)
 
 **Responsibilities:**
+
 - Calculate zoom scale from pinch gestures
 - Calculate pan position from swipe gestures
 - Apply constraints (min/max zoom, pan limits)
@@ -150,21 +153,22 @@ export class PinchZoomComponent {
 - Notify component of changes
 
 **Key State:**
+
 ```typescript
 class IvyPinch {
     // Zoom state
-    public scale: number = 1;           // Current scale (1 = 100%)
-    private initialScale: number = 1;   // Scale at gesture start
-    private maxScale: number = 3;       // Maximum allowed scale
+    public scale: number = 1; // Current scale (1 = 100%)
+    private initialScale: number = 1; // Scale at gesture start
+    private maxScale: number = 3; // Maximum allowed scale
 
     // Position state
-    public moveX: number = 0;           // Horizontal offset (px)
-    public moveY: number = 0;           // Vertical offset (px)
-    private initialMoveX: number = 0;   // Position at gesture start
+    public moveX: number = 0; // Horizontal offset (px)
+    public moveY: number = 0; // Vertical offset (px)
+    private initialMoveX: number = 0; // Position at gesture start
     private initialMoveY: number = 0;
 
     // Gesture state
-    private distance: number = 0;       // Distance between fingers
+    private distance: number = 0; // Distance between fingers
     private initialDistance: number = 0; // Distance at pinch start
 }
 ```
@@ -172,12 +176,14 @@ class IvyPinch {
 ### Touches (Event Handling Layer)
 
 **Responsibilities:**
+
 - Listen to touch/mouse events
 - Detect gesture types (pinch, pan, double-tap)
 - Calculate touch positions and distances
 - Emit typed events to IvyPinch
 
 **Event Flow:**
+
 ```typescript
 class Touches {
     // Event type state machine
@@ -190,14 +196,14 @@ class Touches {
     private handlers = {
         pinch: [],
         pan: [],
-        tap: []
+        tap: [],
     };
 
     // Core detection loop
     detectGesture() {
-        this.detectDoubleTap() ||    // Check tap first
-        this.detectPinch() ||         // Then pinch
-        this.detectLinearSwipe();     // Finally pan
+        this.detectDoubleTap() || // Check tap first
+            this.detectPinch() || // Then pinch
+            this.detectLinearSwipe(); // Finally pan
     }
 }
 ```
@@ -281,6 +287,7 @@ flowchart TD
 ### Why Signals?
 
 Angular 20's signals provide:
+
 1. **Fine-grained reactivity** - Only affected components update
 2. **Automatic dependency tracking** - Computed signals track dependencies
 3. **Better performance** - Less change detection overhead
@@ -393,6 +400,7 @@ mergedProperties = computed<ComponentProperties>(() => {
 ```
 
 This ensures:
+
 - Individual inputs take priority
 - properties object can set multiple at once
 - Defaults are always present
@@ -609,18 +617,18 @@ emit(eventName: string, event: any) {
 
 ```typescript
 type TouchEvent =
-    | 'touchstart'   // Finger touches screen
-    | 'touchmove'    // Finger moves
-    | 'touchend'     // Finger lifts
-    | 'mousedown'    // Mouse button pressed
-    | 'mousemove'    // Mouse moves
-    | 'mouseup'      // Mouse button released
-    | 'wheel';       // Mouse wheel scrolled
+    | 'touchstart' // Finger touches screen
+    | 'touchmove' // Finger moves
+    | 'touchend' // Finger lifts
+    | 'mousedown' // Mouse button pressed
+    | 'mousemove' // Mouse moves
+    | 'mouseup' // Mouse button released
+    | 'wheel'; // Mouse wheel scrolled
 
 type GestureEvent =
-    | 'pinch'        // Two-finger zoom
-    | 'pan'          // One-finger drag
-    | 'tap';         // Double-tap
+    | 'pinch' // Two-finger zoom
+    | 'pan' // One-finger drag
+    | 'tap'; // Double-tap
 ```
 
 ## Transform Mathematics
@@ -668,6 +676,7 @@ const newMoveY = this.moveY - (centerY - this.moveY) * (newScale / this.scale - 
 #### Mathematical Derivation
 
 Let:
+
 - `P` = point to zoom at (in screen coordinates)
 - `S₁` = old scale
 - `S₂` = new scale
@@ -677,7 +686,7 @@ Let:
 We want: Point P maps to same position before and after zoom.
 
 Before zoom: `P_image = (P - T₁) / S₁`
-After zoom:  `P_image = (P - T₂) / S₂`
+After zoom: `P_image = (P - T₂) / S₂`
 
 Setting equal:
 `(P - T₁) / S₁ = (P - T₂) / S₂`
@@ -699,10 +708,12 @@ transform: translate(100px, 50px) scale(2);
 ```
 
 Is equivalent to:
+
 1. Scale by 2
 2. Then translate by (100px, 50px)
 
 **Our transform:**
+
 ```css
 transform: translate3d(moveX, moveY, 0) scale(scale);
 ```
@@ -721,6 +732,7 @@ transform: translate3d(100px, 50px, 0) scale(2);
 ```
 
 Becomes:
+
 ```
 | 2   0   0   100 |
 | 0   2   0   50  |

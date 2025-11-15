@@ -1,16 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    OnInit,
-    OnDestroy,
-    computed,
-    input,
-    output,
-    signal,
-    effect,
-    inject,
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, OnInit, OnDestroy, computed, input, output, signal, effect, inject } from '@angular/core';
 
 import { Properties } from './interfaces';
 import { defaultProperties } from './properties';
@@ -269,20 +257,14 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     }
 
     brightnessIn(): number {
-        const newBrightness = Math.min(
-            this.brightness() + this.brightnessStep(),
-            this.maxBrightness()
-        );
+        const newBrightness = Math.min(this.brightness() + this.brightnessStep(), this.maxBrightness());
         this.currentBrightness.set(newBrightness);
         this.brightnessChanged.emit(newBrightness);
         return newBrightness;
     }
 
     brightnessOut(): number {
-        const newBrightness = Math.max(
-            this.brightness() - this.brightnessStep(),
-            this.minBrightness()
-        );
+        const newBrightness = Math.max(this.brightness() - this.brightnessStep(), this.minBrightness());
         this.currentBrightness.set(newBrightness);
         this.brightnessChanged.emit(newBrightness);
         return newBrightness;

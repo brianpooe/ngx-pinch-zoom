@@ -5,7 +5,7 @@
     <div class="demo">
         <h2>transition-duration: 1000</h2>
         <p>Defines the speed of the animation of positioning and transforming.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [transition-duration]="1000" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -17,7 +17,7 @@
     <div class="demo">
         <h2>limit-zoom: 2</h2>
         <p>Limit the maximum available scale. By default, the maximum scale is calculated based on the original image size.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [limit-zoom]="2" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -29,7 +29,7 @@
     <div class="demo">
         <h2>minScale: 1</h2>
         <p>Limit the minimum acceptable scale. With a value of 1, it is recommended to use this parameter with limitPan.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [minScale]="1" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -41,7 +41,7 @@
     <div class="demo">
         <h2>auto-zoom-out: true</h2>
         <p>Automatic restoration of the original size of an image after its zooming in by two fingers.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [auto-zoom-out]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -53,7 +53,7 @@
     <div class="demo">
         <h2>double-tap: false</h2>
         <p>Zooming in and zooming out of an image, depending on its current condition, with double tap.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [double-tap]="false" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -65,7 +65,7 @@
     <div class="demo">
         <h2>double-tap-scale: 4</h2>
         <p>Double tap scaling factor.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [double-tap-scale]="4" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -76,7 +76,7 @@
     <!-- disabled -->
     <div class="demo">
         <h2>disabled: true</h2>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [disabled]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -88,7 +88,7 @@
     <div class="demo">
         <h2>disablePan: true</h2>
         <p>Turn off panning with one finger.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [disablePan]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -100,7 +100,7 @@
     <div class="demo">
         <h2>minPanScale: 2</h2>
         <p>Minimum zoom at which panning is enabled.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [minPanScale]="2" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -115,7 +115,7 @@
             hidden - the overflow is clipped, and the rest of the content will be invisible. visible - the overflow is not clipped. The
             content renders outside the element's box.
         </p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [overflow]="'visible'" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -130,7 +130,7 @@
             Disable zoom controls. auto - Disable zoom controls on touch screen devices. never - show zoom controls on all devices. disable
             - disable zoom controls on all devices.
         </p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [disableZoomControl]="'disable'" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -142,7 +142,7 @@
     <div class="demo">
         <h2>zoomControlScale: 2</h2>
         <p>Zoom factor when using zoom controls.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [zoomControlScale]="2" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -154,7 +154,7 @@
     <div class="demo">
         <h2>backgroundColor: 'rgba(0,0,0,0.65)'</h2>
         <p>The background color of the container.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [backgroundColor]="'rgba(0,0,0,0.65)'" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -166,7 +166,7 @@
     <div class="demo">
         <h2>limitPan: true</h2>
         <p>Stop panning when the edge of the image reaches the edge of the screen.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [limitPan]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -181,7 +181,7 @@
             By default, subscriptions are made for mouse and touch screen events. The value auto means that the subscription will be only
             for touch events or only for mouse events, depending on the type of screen.
         </p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [listeners]="'auto'" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -193,7 +193,7 @@
     <div class="demo">
         <h2>wheel: false</h2>
         <p>Scale with the mouse wheel.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [wheel]="false" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -205,7 +205,7 @@
     <div class="demo">
         <h2>wheelZoomFactor: 0.5</h2>
         <p>Zoom factor when zoomed in with the mouse wheel.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [wheelZoomFactor]="0.5" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -223,7 +223,7 @@
             image, then specify the attributes width and height for the <img /> tag. When setting the property value to `true`, a
             subscription to the window resize listener will be created.
         </p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [autoHeight]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -237,7 +237,7 @@
     <div class="demo">
         <h2>draggableImage: true</h2>
         <p>Sets the attribute draggable to the img tag.</p>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [draggableImage]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"
@@ -248,7 +248,7 @@
     <!-- draggableImage -->
     <div class="demo">
         <h2>draggableOnPinch: true</h2>
-        <p>Zoom State: {{this.zoomstate}}</p>
+        <p>Zoom State: {{ this.zoomstate }}</p>
         <pinch-zoom [draggableOnPinch]="true" (zoomChanged)="onZoomChanged($event)">
             <img
                 src="https://images.unsplash.com/photo-1577234162223-98e9caa94705?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=752&q=80"

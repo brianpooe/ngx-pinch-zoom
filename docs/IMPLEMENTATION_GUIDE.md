@@ -20,15 +20,17 @@ Let's add the ability to rotate images with a two-finger twist gesture.
 #### Step 1: Add Properties
 
 **File: `interfaces.ts`**
+
 ```typescript
 export interface Properties {
     // ... existing properties
     enableRotation?: boolean;
-    rotationLockThreshold?: number;  // Degrees before rotation activates
+    rotationLockThreshold?: number; // Degrees before rotation activates
 }
 ```
 
 **File: `properties.ts`**
+
 ```typescript
 export const defaultProperties: Properties = {
     // ... existing defaults
@@ -40,6 +42,7 @@ export const defaultProperties: Properties = {
 #### Step 2: Add Input Signal
 
 **File: `pinch-zoom.component.ts`**
+
 ```typescript
 export class PinchZoomComponent implements OnInit, OnDestroy {
     // ... existing inputs
@@ -60,14 +63,15 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 #### Step 3: Add State to IvyPinch
 
 **File: `ivypinch.ts`**
+
 ```typescript
 export class IvyPinch {
     // ... existing properties
 
     // Rotation state
-    public rotation: number = 0;           // Current rotation in degrees
-    private initialRotation: number = 0;   // Rotation at gesture start
-    private rotationAngle: number = 0;     // Cumulative rotation
+    public rotation: number = 0; // Current rotation in degrees
+    private initialRotation: number = 0; // Rotation at gesture start
+    private rotationAngle: number = 0; // Cumulative rotation
 
     // ... existing methods
 
@@ -86,10 +90,7 @@ export class IvyPinch {
         const touch2 = touches[1];
 
         // Calculate angle between fingers
-        const angle = Math.atan2(
-            touch2.clientY - touch1.clientY,
-            touch2.clientX - touch1.clientX
-        ) * (180 / Math.PI);
+        const angle = Math.atan2(touch2.clientY - touch1.clientY, touch2.clientX - touch1.clientX) * (180 / Math.PI);
 
         // Initialize on first move
         if (this.rotationAngle === 0) {
@@ -114,20 +115,10 @@ export class IvyPinch {
         this.rotation = this.initialRotation + delta;
 
         // Apply transform with rotation
-        this.transformElementWithRotation(
-            this.scale,
-            this.moveX,
-            this.moveY,
-            this.rotation
-        );
+        this.transformElementWithRotation(this.scale, this.moveX, this.moveY, this.rotation);
     };
 
-    private transformElementWithRotation(
-        scale: number,
-        moveX: number,
-        moveY: number,
-        rotation: number
-    ): void {
+    private transformElementWithRotation(scale: number, moveX: number, moveY: number, rotation: number): void {
         const transform = `
             translate3d(${moveX}px, ${moveY}px, 0)
             scale(${scale})
@@ -146,6 +137,7 @@ export class IvyPinch {
 #### Step 4: Register Event Handler
 
 **File: `ivypinch.ts` (in constructor)**
+
 ```typescript
 constructor(properties: Properties, private zoomChanged: (scale: number) => void) {
     // ... existing initialization
@@ -166,6 +158,7 @@ constructor(properties: Properties, private zoomChanged: (scale: number) => void
 #### Step 5: Add Output Event (Optional)
 
 **File: `pinch-zoom.component.ts`**
+
 ```typescript
 export class PinchZoomComponent implements OnInit, OnDestroy {
     // ... existing outputs
@@ -186,6 +179,7 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 #### Step 6: Update IvyPinch Callback
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private zoomChanged: (scale: number, rotation?: number) => void;
 
@@ -200,10 +194,7 @@ private handleRotation = (event: any): void => {
 #### Step 7: Test
 
 ```html
-<pinch-zoom
-    [enableRotation]="true"
-    [rotationLockThreshold]="15"
-    (rotationChanged)="onRotationChange($event)">
+<pinch-zoom [enableRotation]="true" [rotationLockThreshold]="15" (rotationChanged)="onRotationChange($event)">
     <img src="image.jpg" />
 </pinch-zoom>
 ```
@@ -215,20 +206,22 @@ Add custom easing functions for smoother zoom animations.
 #### Step 1: Define Easing Functions
 
 **File: `ivypinch.ts`**
+
 ```typescript
 type EasingFunction = 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 
 const easingFunctions = {
-    'linear': (t: number) => t,
+    linear: (t: number) => t,
     'ease-in': (t: number) => t * t,
     'ease-out': (t: number) => t * (2 - t),
-    'ease-in-out': (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+    'ease-in-out': (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 };
 ```
 
 #### Step 2: Add Property
 
 **File: `interfaces.ts`**
+
 ```typescript
 export interface Properties {
     // ... existing
@@ -239,6 +232,7 @@ export interface Properties {
 #### Step 3: Implement Animated Zoom
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private animateZoom(
     targetScale: number,
@@ -300,6 +294,7 @@ handleTouchStart(event: TouchEvent) {
 #### Step 2: Fix Initialization
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private handleLinearSwipe = (event: any): void => {
     // Store initial position on first move
@@ -345,6 +340,7 @@ private resetSwipeState(): void {
 #### Fix 1: Adjust Timing Window
 
 **File: `touches.ts`**
+
 ```typescript
 detectDoubleTap(): boolean {
     const now = Date.now();
@@ -425,6 +421,7 @@ detectDoubleTap(): boolean {
 #### Step 1: Verify Listeners Are Removed
 
 **File: `touches.ts`**
+
 ```typescript
 destroy(): void {
     console.log('[Touches] Removing listeners');
@@ -452,6 +449,7 @@ destroy(): void {
 #### Step 2: Ensure destroy() is Called
 
 **File: `pinch-zoom.component.ts`**
+
 ```typescript
 ngOnDestroy(): void {
     console.log('[PinchZoom] Component destroying');
@@ -482,6 +480,7 @@ ngOnDestroy(): void {
 Zoom to a specific coordinate programmatically.
 
 **File: `ivypinch.ts`**
+
 ```typescript
 public zoomToPoint(
     targetScale: number,
@@ -555,6 +554,7 @@ private animateZoomToPoint(
 ```
 
 **Usage:**
+
 ```typescript
 // In component
 @ViewChild('pinchZoom') pinchZoomRef!: PinchZoomComponent;
@@ -570,6 +570,7 @@ zoomToTopLeft() {
 Add a visual indicator of current zoom level.
 
 **File: `pinch-zoom.component.ts`**
+
 ```typescript
 export class PinchZoomComponent implements OnInit, OnDestroy {
     // ... existing code
@@ -590,23 +591,25 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 ```
 
 **File: `pinch-zoom.component.html`**
+
 ```html
 <div class="pinch-zoom-container">
     <ng-content></ng-content>
 
     <!-- Zoom indicator -->
     @if (isZoomedIn()) {
-        <div class="zoom-indicator">
-            <div class="zoom-label">{{ zoomPercentage() }}%</div>
-            <div class="zoom-bar">
-                <div class="zoom-bar-fill" [style.width]="zoomBarWidth()"></div>
-            </div>
+    <div class="zoom-indicator">
+        <div class="zoom-label">{{ zoomPercentage() }}%</div>
+        <div class="zoom-bar">
+            <div class="zoom-bar-fill" [style.width]="zoomBarWidth()"></div>
         </div>
+    </div>
     }
 </div>
 ```
 
 **File: `pinch-zoom.component.sass`**
+
 ```sass
 .zoom-indicator
     position: absolute
@@ -643,6 +646,7 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 Reduce the number of transform updates during panning.
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private lastPanTime: number = 0;
 private readonly PAN_THROTTLE_MS = 16;  // ~60fps
@@ -664,6 +668,7 @@ private handleLinearSwipe = (event: any): void => {
 Batch transform updates to animation frames.
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private rafId: number | null = null;
 private pendingTransform: {
@@ -712,6 +717,7 @@ public destroy(): void {
 Avoid expensive calculations on every resize event.
 
 **File: `ivypinch.ts`**
+
 ```typescript
 private resizeTimeout: number | null = null;
 
@@ -747,6 +753,7 @@ public destroy(): void {
 Add visual overlay showing current transform state.
 
 **Create: `transform-debugger.component.ts`**
+
 ```typescript
 import { Component, input, computed } from '@angular/core';
 
@@ -763,37 +770,39 @@ import { Component, input, computed } from '@angular/core';
             <div class="debug-grid"></div>
         </div>
     `,
-    styles: [`
-        .debug-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            z-index: 9999;
-        }
+    styles: [
+        `
+            .debug-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                pointer-events: none;
+                z-index: 9999;
+            }
 
-        .debug-info {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #0f0;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 12px;
-        }
+            .debug-info {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                color: #0f0;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 12px;
+            }
 
-        .debug-grid {
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-        }
-    `]
+            .debug-grid {
+                width: 100%;
+                height: 100%;
+                background-image:
+                    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+                background-size: 50px 50px;
+            }
+        `,
+    ],
 })
 export class TransformDebugger {
     scale = input<number>(1);
@@ -805,16 +814,13 @@ export class TransformDebugger {
 ```
 
 **Usage:**
+
 ```html
 <pinch-zoom #pz>
     <img src="image.jpg" />
 </pinch-zoom>
 
-<transform-debugger
-    [scale]="pz.scale()"
-    [moveX]="pz.moveX()"
-    [moveY]="pz.moveY()">
-</transform-debugger>
+<transform-debugger [scale]="pz.scale()" [moveX]="pz.moveX()" [moveY]="pz.moveY()"> </transform-debugger>
 ```
 
 ### Technique 2: Event Flow Logging
@@ -822,6 +828,7 @@ export class TransformDebugger {
 Add comprehensive logging to trace event flow.
 
 **File: `touches.ts`**
+
 ```typescript
 private logEvent(stage: string, data: any): void {
     if (!this.debug) return;
@@ -853,6 +860,7 @@ handleTouchMove(event: TouchEvent): void {
 ### Unit Testing IvyPinch
 
 **File: `ivypinch.spec.ts`**
+
 ```typescript
 import { IvyPinch } from './ivypinch';
 import { Properties } from './interfaces';
@@ -892,8 +900,8 @@ describe('IvyPinch', () => {
         const mockEvent = {
             touches: [
                 { clientX: 0, clientY: 0 },
-                { clientX: 500, clientY: 0 }
-            ]
+                { clientX: 500, clientY: 0 },
+            ],
         };
 
         // This would zoom to 5x, but limit is 3x
@@ -914,6 +922,7 @@ describe('IvyPinch', () => {
 ### Integration Testing
 
 **File: `pinch-zoom.component.spec.ts`**
+
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PinchZoomComponent } from './pinch-zoom.component';
@@ -924,7 +933,7 @@ describe('PinchZoomComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PinchZoomComponent]
+            imports: [PinchZoomComponent],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PinchZoomComponent);
@@ -964,6 +973,7 @@ describe('PinchZoomComponent', () => {
 ## Summary
 
 This guide covers:
+
 - ✅ Adding new features (rotation, easing)
 - ✅ Fixing common bugs (jumps, double-tap, memory leaks)
 - ✅ Common customizations (zoom to point, indicators)

@@ -7,25 +7,25 @@ Welcome! This documentation will help you understand and maintain the ngx-pinch-
 ### For New Maintainers - Start Here
 
 1. **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** ⚡
-   - Fast lookup for common tasks
-   - Code locations
-   - Common patterns
-   - Debugging checklist
-   - **Read this first for quick answers!**
+    - Fast lookup for common tasks
+    - Code locations
+    - Common patterns
+    - Debugging checklist
+    - **Read this first for quick answers!**
 
 2. **[ARCHITECTURE.md](ARCHITECTURE.md)** 🏗️
-   - Deep dive into how everything works
-   - Component interaction diagrams
-   - Transform mathematics explained
-   - Event flow documentation
-   - **Read this to understand the system**
+    - Deep dive into how everything works
+    - Component interaction diagrams
+    - Transform mathematics explained
+    - Event flow documentation
+    - **Read this to understand the system**
 
 3. **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)** 🛠️
-   - Step-by-step implementation examples
-   - How to add features
-   - How to fix bugs
-   - Code customizations
-   - **Read this when making changes**
+    - Step-by-step implementation examples
+    - How to add features
+    - How to fix bugs
+    - Code customizations
+    - **Read this when making changes**
 
 ### Documentation Organization
 
@@ -62,50 +62,50 @@ docs/
 
 ### "Where do I find...?"
 
-| Question | Answer |
-|----------|--------|
-| How pinch zoom works? | ARCHITECTURE.md → "Transform Mathematics" |
-| How to add an input property? | IMPLEMENTATION_GUIDE.md → "Adding New Features" |
-| Why isn't pan working? | QUICK_REFERENCE.md → "Debugging Checklist" |
-| What is `transformElement()`? | ARCHITECTURE.md → "Transform Mathematics" |
-| How to add rotation? | IMPLEMENTATION_GUIDE.md → "Feature: Add Rotation Support" |
-| Performance best practices? | QUICK_REFERENCE.md → "Performance Tips" |
-| Event flow diagram? | ARCHITECTURE.md → "Event System" |
+| Question                      | Answer                                                    |
+| ----------------------------- | --------------------------------------------------------- |
+| How pinch zoom works?         | ARCHITECTURE.md → "Transform Mathematics"                 |
+| How to add an input property? | IMPLEMENTATION_GUIDE.md → "Adding New Features"           |
+| Why isn't pan working?        | QUICK_REFERENCE.md → "Debugging Checklist"                |
+| What is `transformElement()`? | ARCHITECTURE.md → "Transform Mathematics"                 |
+| How to add rotation?          | IMPLEMENTATION_GUIDE.md → "Feature: Add Rotation Support" |
+| Performance best practices?   | QUICK_REFERENCE.md → "Performance Tips"                   |
+| Event flow diagram?           | ARCHITECTURE.md → "Event System"                          |
 
 ### "How do I...?"
 
-| Task | Document |
-|------|----------|
-| Fix image jumping | IMPLEMENTATION_GUIDE.md → "Bug: Image Jumps on First Touch" |
+| Task                     | Document                                                                |
+| ------------------------ | ----------------------------------------------------------------------- |
+| Fix image jumping        | IMPLEMENTATION_GUIDE.md → "Bug: Image Jumps on First Touch"             |
 | Add custom zoom behavior | IMPLEMENTATION_GUIDE.md → "Custom: Programmatic Zoom to Specific Point" |
-| Debug transforms | IMPLEMENTATION_GUIDE.md → "Technique 1: Visual Transform Debugging" |
-| Improve performance | IMPLEMENTATION_GUIDE.md → "Performance Optimization" |
-| Add zoom indicator | IMPLEMENTATION_GUIDE.md → "Custom: Zoom Level Indicator" |
+| Debug transforms         | IMPLEMENTATION_GUIDE.md → "Technique 1: Visual Transform Debugging"     |
+| Improve performance      | IMPLEMENTATION_GUIDE.md → "Performance Optimization"                    |
+| Add zoom indicator       | IMPLEMENTATION_GUIDE.md → "Custom: Zoom Level Indicator"                |
 
 ## 📖 Reading Code
 
 ### Source Files (In Order of Complexity)
 
 1. **properties.ts** (Easiest)
-   - Just default configuration values
-   - Good starting point
+    - Just default configuration values
+    - Good starting point
 
 2. **interfaces.ts** (Easy)
-   - TypeScript type definitions
-   - Understand data structures
+    - TypeScript type definitions
+    - Understand data structures
 
 3. **pinch-zoom.component.ts** (Medium)
-   - Angular component with signals
-   - See how properties flow
+    - Angular component with signals
+    - See how properties flow
 
 4. **touches.ts** (Medium-Hard)
-   - Event detection logic
-   - Gesture recognition
+    - Event detection logic
+    - Gesture recognition
 
 5. **ivypinch.ts** (Hardest)
-   - Core zoom/pan mathematics
-   - Transform calculations
-   - **Most complex file in the library**
+    - Core zoom/pan mathematics
+    - Transform calculations
+    - **Most complex file in the library**
 
 ### Recommended Reading Order
 
@@ -157,20 +157,20 @@ flowchart TD
 ### Key Concepts to Understand
 
 1. **CSS Transform Matrix**
-   - How we apply zoom and pan using a single CSS property
-   - See: ARCHITECTURE.md → "Transform Mathematics"
+    - How we apply zoom and pan using a single CSS property
+    - See: ARCHITECTURE.md → "Transform Mathematics"
 
 2. **Signal-Based Reactivity**
-   - How Angular signals provide fine-grained updates
-   - See: ARCHITECTURE.md → "Signal Architecture"
+    - How Angular signals provide fine-grained updates
+    - See: ARCHITECTURE.md → "Signal Architecture"
 
 3. **Gesture State Machine**
-   - How events transition between states
-   - See: QUICK_REFERENCE.md → "Gesture State Machine"
+    - How events transition between states
+    - See: QUICK_REFERENCE.md → "Gesture State Machine"
 
 4. **Coordinate Systems**
-   - Element-relative vs page-relative positions
-   - See: ARCHITECTURE.md → "Transform Mathematics"
+    - Element-relative vs page-relative positions
+    - See: ARCHITECTURE.md → "Transform Mathematics"
 
 ## 🛠️ Making Changes
 
@@ -205,7 +205,7 @@ console.log('[IvyPinch] handlePinch', {
     scale: this.scale,
     distance: this.distance,
     moveX: this.moveX,
-    moveY: this.moveY
+    moveY: this.moveY,
 });
 ```
 

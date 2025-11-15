@@ -302,7 +302,6 @@ export class IvyPinch {
         this.scale = newScale;
         this.zoomChanged(this.scale);
 
-
         /* Get cursor position over image */
         const xCenter = event.clientX - this.elementPosition.left - this.initialMoveX;
         const yCenter = event.clientY - this.elementPosition.top - this.initialMoveY;
@@ -538,9 +537,7 @@ export class IvyPinch {
     }
 
     private getDistance(touches: TouchList): number {
-        return Math.sqrt(
-            Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2),
-        );
+        return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
     }
 
     private getImageHeight(): number {
@@ -556,15 +553,7 @@ export class IvyPinch {
     private transformElement(duration: number): void {
         this.element.style.transition = 'all ' + duration + 'ms';
         this.element.style.transform =
-            'matrix(' +
-            Number(this.scale) +
-            ', 0, 0, ' +
-            Number(this.scale) +
-            ', ' +
-            Number(this.moveX) +
-            ', ' +
-            Number(this.moveY) +
-            ')';
+            'matrix(' + Number(this.scale) + ', 0, 0, ' + Number(this.scale) + ', ' + Number(this.moveX) + ', ' + Number(this.moveY) + ')';
     }
 
     private isTouchScreen(): boolean {
@@ -593,10 +582,7 @@ export class IvyPinch {
         const imgWidth = this.getImageWidth();
 
         if (this.scale > 1) {
-            return (
-                imgHeight * this.scale > this.parentElement.offsetHeight ||
-                imgWidth * this.scale > this.parentElement.offsetWidth
-            );
+            return imgHeight * this.scale > this.parentElement.offsetHeight || imgWidth * this.scale > this.parentElement.offsetWidth;
         }
         if (this.scale === 1) {
             return imgHeight > this.parentElement.offsetHeight || imgWidth > this.parentElement.offsetWidth;
@@ -660,11 +646,9 @@ export class IvyPinch {
                 this.scale = this.initialScale * this.properties.doubleTapScale!;
                 this.zoomChanged(this.scale);
                 this.moveX =
-                    this.initialMoveX -
-                    (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
+                    this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
                 this.moveY =
-                    this.initialMoveY -
-                    (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
+                    this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
             } else {
                 const zoomControlScale = this.properties.zoomControlScale || 0;
                 this.scale = this.initialScale * (zoomControlScale + 1);
