@@ -4,6 +4,10 @@ import { Properties } from './interfaces';
 import { defaultProperties } from './properties';
 import { IvyPinch } from './ivypinch';
 import { CommonModule } from '@angular/common';
+import { BrightnessService } from './services/brightness.service';
+import { ZoomStateService } from './services/zoom-state.service';
+import { ZoomControlsComponent } from './components/zoom-controls/zoom-controls.component';
+import { BrightnessControlsComponent } from './components/brightness-controls/brightness-controls.component';
 
 interface ComponentProperties extends Properties {
     disabled?: boolean;
@@ -24,10 +28,13 @@ export const _defaultComponentProperties: ComponentProperties = {
     templateUrl: './pinch-zoom.component.html',
     styleUrls: ['./pinch-zoom.component.sass'],
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, ZoomControlsComponent, BrightnessControlsComponent],
+    providers: [BrightnessService, ZoomStateService],
 })
 export class PinchZoomComponent implements OnInit, OnDestroy {
     private readonly elementRef = inject(ElementRef<HTMLElement>);
+    private readonly brightnessService = inject(BrightnessService);
+    private readonly zoomStateService = inject(ZoomStateService);
     private pinchZoom!: IvyPinch;
     private readonly defaultComponentProperties: ComponentProperties;
 
@@ -70,7 +77,6 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 
     // Internal signals
     private currentScale = signal<number>(1);
-    private currentBrightness = signal<number>(1.0);
 
     // Computed signals for reactive properties
     mergedProperties = computed<ComponentProperties>(() => {
@@ -173,9 +179,9 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
         return true;
     });
 
-    // Brightness computed signals
+    // Brightness computed signals - delegating to service
     brightness = computed<number>(() => {
-        return this.currentBrightness();
+        return this.brightnessService.brightness();
     });
 
     isBrightnessControl = computed<boolean>(() => {
@@ -186,15 +192,25 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     });
 
     isBrightnessAtMin = computed<boolean>(() => {
-        return this.brightness() <= this.minBrightness();
+        return this.brightnessService.state().atMin;
     });
 
     isBrightnessAtMax = computed<boolean>(() => {
-        return this.brightness() >= this.maxBrightness();
+        return this.brightnessService.state().atMax;
     });
 
     constructor() {
         this.defaultComponentProperties = this.getDefaultComponentProperties();
+
+        // Initialize brightness service configuration
+        effect(() => {
+            this.brightnessService.updateConfig({
+                enabled: this.enableBrightnessControl(),
+                step: this.brightnessStep(),
+                min: this.minBrightness(),
+                max: this.maxBrightness(),
+            });
+        });
 
         // Effect to reinitialize when properties change
         effect(() => {
@@ -212,6 +228,18 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
             if (element) {
                 element.style.filter = `brightness(${brightness})`;
             }
+        });
+
+        // Effect to emit brightness changes
+        effect(() => {
+            const brightness = this.brightnessService.brightness();
+            this.brightnessChanged.emit(brightness);
+        });
+
+        // Effect to sync zoom state to service
+        effect(() => {
+            const scale = this.currentScale();
+            this.zoomStateService.updateTransform({ scale });
         });
     }
 
@@ -261,22 +289,15 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     }
 
     brightnessIn(): number {
-        const newBrightness = Math.min(this.brightness() + this.brightnessStep(), this.maxBrightness());
-        this.currentBrightness.set(newBrightness);
-        this.brightnessChanged.emit(newBrightness);
-        return newBrightness;
+        return this.brightnessService.increase();
     }
 
     brightnessOut(): number {
-        const newBrightness = Math.max(this.brightness() - this.brightnessStep(), this.minBrightness());
-        this.currentBrightness.set(newBrightness);
-        this.brightnessChanged.emit(newBrightness);
-        return newBrightness;
+        return this.brightnessService.decrease();
     }
 
     resetBrightness(): void {
-        this.currentBrightness.set(1.0);
-        this.brightnessChanged.emit(1.0);
+        this.brightnessService.reset();
     }
 
     zoomToPoint(event: MouseEvent): void {
