@@ -24,7 +24,7 @@ export type EventType =
     | 'wheel'
     | 'double-tap'
     | 'resize';
-export type TouchHandler ='handleTouchstart' | 'handleTouchmove' | 'handleTouchend';
+export type TouchHandler = 'handleTouchstart' | 'handleTouchmove' | 'handleTouchend';
 export type MouseHandler = 'handleMousedown' | 'handleMousemove' | 'handleMouseup' | 'handleWheel';
 export type OtherHandler = 'handleResize';
 
@@ -124,10 +124,7 @@ export class Touches {
             }
 
             // Determine target element (Window, Document, or this.element)
-            const target =
-                listener === 'resize' ? window :
-                (listener === 'mouseup' || listener === 'mousemove') ? document :
-                this.element;
+            const target = listener === 'resize' ? window : listener === 'mouseup' || listener === 'mousemove' ? document : this.element;
 
             // Add or remove the listener
             if (action === 'addEventListener') {
@@ -280,11 +277,7 @@ export class Touches {
         }
 
         // Linear swipe
-        if (
-            this.detectLinearSwipe(event) ||
-            this.eventType === 'horizontal-swipe' ||
-            this.eventType === 'vertical-swipe'
-        ) {
+        if (this.detectLinearSwipe(event) || this.eventType === 'horizontal-swipe' || this.eventType === 'vertical-swipe') {
             this.handleLinearSwipe(event);
         }
     };
@@ -378,11 +371,7 @@ export class Touches {
         const touches = (event as TouchEvent).touches;
 
         if (touches) {
-            if (
-                (touches.length === 1 && !this.eventType) ||
-                this.eventType === 'horizontal-swipe' ||
-                this.eventType === 'vertical-swipe'
-            ) {
+            if ((touches.length === 1 && !this.eventType) || this.eventType === 'horizontal-swipe' || this.eventType === 'vertical-swipe') {
                 return this.getLinearSwipeType(event);
             }
         } else {

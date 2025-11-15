@@ -1003,9 +1003,7 @@ export class IvyPinch {
      * @returns Distance in pixels
      */
     private getDistance(touches: TouchList): number {
-        return Math.sqrt(
-            Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2),
-        );
+        return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
     }
 
     // ========================================================================
@@ -1132,11 +1130,9 @@ export class IvyPinch {
 
                 // Calculate position to zoom at tap location
                 this.moveX =
-                    this.initialMoveX -
-                    (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
+                    this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
                 this.moveY =
-                    this.initialMoveY -
-                    (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
+                    this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
             }
             // Case 2: Programmatic zoom (zoom at center)
             else {
@@ -1279,10 +1275,7 @@ export class IvyPinch {
 
         // Check if scaled image exceeds container
         if (this.scale > 1) {
-            return (
-                imgHeight * this.scale > this.parentElement.offsetHeight ||
-                imgWidth * this.scale > this.parentElement.offsetWidth
-            );
+            return imgHeight * this.scale > this.parentElement.offsetHeight || imgWidth * this.scale > this.parentElement.offsetWidth;
         }
 
         // Check if normal image exceeds container

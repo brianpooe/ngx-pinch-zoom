@@ -40,20 +40,20 @@ ngx-pinch-zoom/
 ### Core Components
 
 1. **PinchZoomComponent** (`pinch-zoom.component.ts`)
-   - Main Angular component
-   - Uses signals for all inputs and outputs
-   - Implements modern Angular patterns (inject, computed, effect)
-   - Standalone component
+    - Main Angular component
+    - Uses signals for all inputs and outputs
+    - Implements modern Angular patterns (inject, computed, effect)
+    - Standalone component
 
 2. **IvyPinch** (`ivypinch.ts`)
-   - Core zoom/pan logic
-   - Handles transformations and calculations
-   - No Angular dependencies (plain TypeScript class)
+    - Core zoom/pan logic
+    - Handles transformations and calculations
+    - No Angular dependencies (plain TypeScript class)
 
 3. **Touches** (`touches.ts`)
-   - Event handling for touch and mouse interactions
-   - Gesture detection (pinch, pan, tap, double-tap)
-   - Cross-browser compatibility
+    - Event handling for touch and mouse interactions
+    - Gesture detection (pinch, pan, tap, double-tap)
+    - Cross-browser compatibility
 
 ## Development Setup
 
@@ -94,6 +94,7 @@ npm run build-lib
 ```
 
 Output is generated in `dist/ngx-pinch-zoom/` with:
+
 - ESM bundles
 - TypeScript declaration files
 - package.json for npm publishing
@@ -121,7 +122,7 @@ disabled = input<boolean>(false);
 zoomChanged = output<number>();
 
 scale = computed<number>(() => {
-  return this.currentScale();
+    return this.currentScale();
 });
 ```
 
@@ -147,30 +148,30 @@ The project uses strict TypeScript settings:
 
 ```json
 {
-  "strict": true,
-  "strictNullChecks": true,
-  "strictInjectionParameters": true,
-  "strictInputAccessModifiers": true,
-  "strictTemplates": true
+    "strict": true,
+    "strictNullChecks": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
 }
 ```
 
 ### Adding New Features
 
 1. **Update the component** (`pinch-zoom.component.ts`):
-   - Add input signals for configuration
-   - Add computed signals for derived state
-   - Update the component template if needed
+    - Add input signals for configuration
+    - Add computed signals for derived state
+    - Update the component template if needed
 
 2. **Update core logic** (`ivypinch.ts`):
-   - Add properties to the `Properties` interface
-   - Implement the functionality
-   - Test calculations thoroughly
+    - Add properties to the `Properties` interface
+    - Implement the functionality
+    - Test calculations thoroughly
 
 3. **Document the feature**:
-   - Update README.md with the new property
-   - Add usage examples
-   - Document default values
+    - Update README.md with the new property
+    - Add usage examples
+    - Document default values
 
 ### Testing Changes
 
@@ -205,16 +206,16 @@ npm update
 ### Debugging
 
 1. **Component Issues**:
-   - Check signal reactivity with Angular DevTools
-   - Use `effect(() => console.log(signalValue()))`
+    - Check signal reactivity with Angular DevTools
+    - Use `effect(() => console.log(signalValue()))`
 
 2. **Touch/Mouse Issues**:
-   - Add console.logs in `touches.ts` event handlers
-   - Check browser dev tools for event listeners
+    - Add console.logs in `touches.ts` event handlers
+    - Check browser dev tools for event listeners
 
 3. **Transform Issues**:
-   - Inspect `ivypinch.ts` transformElement method
-   - Check CSS transform values in browser inspector
+    - Inspect `ivypinch.ts` transformElement method
+    - Check CSS transform values in browser inspector
 
 ## Browser Compatibility
 
@@ -237,12 +238,14 @@ The library supports all modern browsers:
 ### Build Failures
 
 **TypeScript errors**: Ensure strict mode compliance
+
 ```bash
 # Check TypeScript version
 npx tsc --version  # Should be ~5.8.0
 ```
 
 **Dependency conflicts**: Clear cache and reinstall
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install

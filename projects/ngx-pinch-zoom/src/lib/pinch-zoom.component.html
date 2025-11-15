@@ -1,48 +1,48 @@
 <div class="pinch-zoom-content" [class.pz-dragging]="isDragging()">
-  <ng-content></ng-content>
+    <ng-content></ng-content>
 </div>
 
 <!-- Controls container at bottom center -->
 @if (isControl() || isBrightnessControl()) {
-  <div class="pz-controls-container">
-    <!-- Zoom control -->
-    @if (isControl()) {
-      <div
-        class="pz-zoom-button"
-        [class.pz-zoom-button-out]="isZoomedIn()"
-        (click)="toggleZoom()"
-        (keydown.enter)="toggleZoom()"
-        (keydown.space)="toggleZoom(); $event.preventDefault()"
-        role="button"
-        [attr.aria-label]="isZoomedIn() ? 'Zoom out' : 'Zoom in'"
-        tabindex="0"
-      ></div>
-    }
+    <div class="pz-controls-container">
+        <!-- Zoom control -->
+        @if (isControl()) {
+            <div
+                class="pz-zoom-button"
+                [class.pz-zoom-button-out]="isZoomedIn()"
+                (click)="toggleZoom()"
+                (keydown.enter)="toggleZoom()"
+                (keydown.space)="toggleZoom(); $event.preventDefault()"
+                role="button"
+                [attr.aria-label]="isZoomedIn() ? 'Zoom out' : 'Zoom in'"
+                tabindex="0"
+            ></div>
+        }
 
-    <!-- Brightness controls -->
-    @if (isBrightnessControl()) {
-      <div class="pz-brightness-controls">
-        <div
-          class="pz-brightness-button pz-brightness-decrease"
-          [class.pz-brightness-button-disabled]="isBrightnessAtMin()"
-          (click)="brightnessOut()"
-          (keydown.enter)="brightnessOut()"
-          (keydown.space)="brightnessOut(); $event.preventDefault()"
-          role="button"
-          aria-label="Decrease brightness"
-          tabindex="0"
-        ></div>
-        <div
-          class="pz-brightness-button pz-brightness-increase"
-          [class.pz-brightness-button-disabled]="isBrightnessAtMax()"
-          (click)="brightnessIn()"
-          (keydown.enter)="brightnessIn()"
-          (keydown.space)="brightnessIn(); $event.preventDefault()"
-          role="button"
-          aria-label="Increase brightness"
-          tabindex="0"
-        ></div>
-      </div>
-    }
-  </div>
+        <!-- Brightness controls -->
+        @if (isBrightnessControl()) {
+            <div class="pz-brightness-controls">
+                <div
+                    class="pz-brightness-button pz-brightness-decrease"
+                    [class.pz-brightness-button-disabled]="isBrightnessAtMin()"
+                    (click)="brightnessOut()"
+                    (keydown.enter)="brightnessOut()"
+                    (keydown.space)="brightnessOut(); $event.preventDefault()"
+                    role="button"
+                    aria-label="Decrease brightness"
+                    tabindex="0"
+                ></div>
+                <div
+                    class="pz-brightness-button pz-brightness-increase"
+                    [class.pz-brightness-button-disabled]="isBrightnessAtMax()"
+                    (click)="brightnessIn()"
+                    (keydown.enter)="brightnessIn()"
+                    (keydown.space)="brightnessIn(); $event.preventDefault()"
+                    role="button"
+                    aria-label="Increase brightness"
+                    tabindex="0"
+                ></div>
+            </div>
+        }
+    </div>
 }

@@ -35,15 +35,15 @@ This release modernizes the library with Angular 20 and signals API.
 - **Karma/Jasmine**: Removed old testing infrastructure
 - **ESLint**: Removed eslint and unnecessary linting dependencies
 - **Polyfills**: Removed polyfills.ts (not needed in modern browsers)
-- **Test Files**: Removed *.spec.ts files (to be reimplemented with modern testing tools)
+- **Test Files**: Removed \*.spec.ts files (to be reimplemented with modern testing tools)
 - **Backward Compatibility Inputs**: Removed deprecated kebab-case input bindings
 
 ### 🔧 Technical Changes
 
 - Updated `tsconfig.json` with modern settings:
-  - `moduleResolution: "bundler"`
-  - `strict: true`
-  - `strictTemplates: true`
+    - `moduleResolution: "bundler"`
+    - `strict: true`
+    - `strictTemplates: true`
 - Simplified `angular.json` configuration
 - Removed deprecated tslint configuration
 - Updated package scripts for simpler workflow
@@ -52,6 +52,7 @@ This release modernizes the library with Angular 20 and signals API.
 ### 📦 Dependencies
 
 #### Updated
+
 - `@angular/*`: 19.0.0 → 20.0.0
 - `typescript`: 5.5.4 → 5.8.0
 - `rxjs`: 7.5.2 → 7.8.0
@@ -61,6 +62,7 @@ This release modernizes the library with Angular 20 and signals API.
 - `prettier`: 2.7.1 → 3.0.0
 
 #### Removed
+
 - `cypress`
 - `@cypress/schematic`
 - `karma` and related packages
@@ -91,13 +93,15 @@ This release modernizes the library with Angular 20 and signals API.
 2. **Minimum TypeScript Version**: Now requires TypeScript 5.8.0+
 3. **Minimum Node Version**: Now requires Node.js 18.19.1+
 4. **Component Properties**: Computed properties must be called as functions:
-   ```typescript
-   // Before
-   component.scale
 
-   // After
-   component.scale()
-   ```
+    ```typescript
+    // Before
+    component.scale;
+
+    // After
+    component.scale();
+    ```
+
 5. **Removed Exports**: Some internal utilities may no longer be exported
 
 ### 🔄 Migration Guide
@@ -105,34 +109,38 @@ This release modernizes the library with Angular 20 and signals API.
 For users upgrading from previous versions:
 
 1. Update Angular to 20+:
-   ```bash
-   ng update @angular/core@20 @angular/cli@20
-   ```
+
+    ```bash
+    ng update @angular/core@20 @angular/cli@20
+    ```
 
 2. Update your package.json:
-   ```bash
-   npm install @meddv/ngx-pinch-zoom@20.0.0
-   ```
+
+    ```bash
+    npm install @meddv/ngx-pinch-zoom@20.0.0
+    ```
 
 3. Template changes: None required! Input/output binding syntax remains the same.
 
 4. Component reference changes (if using ViewChild):
-   ```typescript
-   // Before
-   @ViewChild('pinchZoom') pinchZoom: PinchZoomComponent;
 
-   // After (recommended)
-   pinchZoom = viewChild<PinchZoomComponent>('pinchZoom');
-   ```
+    ```typescript
+    // Before
+    @ViewChild('pinchZoom') pinchZoom: PinchZoomComponent;
+
+    // After (recommended)
+    pinchZoom = viewChild<PinchZoomComponent>('pinchZoom');
+    ```
 
 5. Accessing computed properties:
-   ```typescript
-   // Before
-   const scale = this.pinchZoom.scale;
 
-   // After
-   const scale = this.pinchZoom()?.scale();
-   ```
+    ```typescript
+    // Before
+    const scale = this.pinchZoom.scale;
+
+    // After
+    const scale = this.pinchZoom()?.scale();
+    ```
 
 ### 🙏 Credits
 
