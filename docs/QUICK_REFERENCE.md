@@ -76,6 +76,7 @@ transform: translate3d(${moveX}px, ${moveY}px, 0) scale(${scale})
 | **Brightness up**     | `brightnessIn()`      | `pinch-zoom.component.ts` | Increases brightness by step              |
 | **Brightness down**   | `brightnessOut()`     | `pinch-zoom.component.ts` | Decreases brightness by step              |
 | **Reset brightness**  | `resetBrightness()`   | `pinch-zoom.component.ts` | Resets brightness to 1.0                  |
+| **Click to zoom**     | `zoomToPoint()`       | `pinch-zoom.component.ts` | Zooms to clicked point                    |
 
 ## Common Patterns
 
@@ -208,6 +209,10 @@ enableBrightnessControl = input<boolean>(false); // Enable brightness UI
 brightnessStep = input<number>(0.1); // Brightness step size
 minBrightness = input<number>(0.1); // Min brightness
 maxBrightness = input<number>(2.0); // Max brightness
+
+// Click-to-zoom controls
+enableClickToZoom = input<boolean>(false); // Enable click-to-zoom
+clickToZoomScale = input<number>(2.5); // Target scale on click
 ```
 
 ### Internal Signals (Component State)
@@ -489,6 +494,9 @@ flowchart TD
 - [ ] Brightness controls (if enabled)
 - [ ] Increase brightness button
 - [ ] Decrease brightness button
+- [ ] Click-to-zoom (if enabled)
+- [ ] Click to zoom in to point
+- [ ] Click again to zoom out
 
 #### Edge Cases
 
@@ -514,6 +522,8 @@ flowchart TD
 - [ ] Set `brightnessStep=0.2` → larger brightness steps
 - [ ] Set `minBrightness=0.5` → stops at 0.5 minimum
 - [ ] Set `maxBrightness=1.5` → stops at 1.5 maximum
+- [ ] Set `enableClickToZoom=true` → enables click-to-zoom
+- [ ] Set `clickToZoomScale=3.0` → zooms to 3x on click
 
 #### Performance Tests
 

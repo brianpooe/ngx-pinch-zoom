@@ -695,6 +695,43 @@ export class IvyPinch {
         return this.scale;
     }
 
+    public zoomToPoint(clientX: number, clientY: number, targetScale: number): void {
+        // Update element position
+        this.getElementPosition();
+
+        // Calculate the click point relative to the element
+        const xRelativeToElement = clientX - this.elementPosition.left;
+        const yRelativeToElement = clientY - this.elementPosition.top;
+
+        // Clamp target scale to limits
+        let newScale = targetScale;
+        if (newScale > this.maxScale) {
+            newScale = this.maxScale;
+        }
+        if (newScale < (this.properties.minScale || 0)) {
+            newScale = this.properties.minScale || 0;
+        }
+
+        // If already at target scale or zoomed in, reset zoom
+        if (this.scale >= targetScale || this.scale > 1) {
+            this.resetScale();
+            return;
+        }
+
+        // Calculate the new position to keep the clicked point centered
+        this.scale = newScale;
+        this.zoomChanged(this.scale);
+
+        // Calculate the zoom offset to keep clicked point under cursor
+        const scaleRatio = newScale / this.initialScale;
+        this.moveX = this.initialMoveX - xRelativeToElement * (scaleRatio - 1);
+        this.moveY = this.initialMoveY - yRelativeToElement * (scaleRatio - 1);
+
+        this.centeringImage();
+        this.updateInitialValues();
+        this.transformElement(this.properties.transitionDuration || 200);
+    }
+
     private setZoom(properties: { scale: number; center?: number[] }): void {
         this.scale = properties.scale;
         this.zoomChanged(this.scale);

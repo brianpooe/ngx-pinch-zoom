@@ -60,6 +60,10 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     minBrightness = input<number>(0.1);
     maxBrightness = input<number>(2.0);
 
+    // Click-to-zoom inputs
+    enableClickToZoom = input<boolean>(false);
+    clickToZoomScale = input<number>(2.5);
+
     // Output signals
     zoomChanged = output<number>();
     brightnessChanged = output<number>();
@@ -273,6 +277,23 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     resetBrightness(): void {
         this.currentBrightness.set(1.0);
         this.brightnessChanged.emit(1.0);
+    }
+
+    zoomToPoint(event: MouseEvent): void {
+        if (!this.enableClickToZoom() || this.isDisabled()) {
+            return;
+        }
+
+        // Prevent default to avoid conflicts
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Get click coordinates
+        const clientX = event.clientX;
+        const clientY = event.clientY;
+
+        // Call IvyPinch method with target scale
+        this.pinchZoom?.zoomToPoint(clientX, clientY, this.clickToZoomScale());
     }
 
     detectLimitZoom(): void {
