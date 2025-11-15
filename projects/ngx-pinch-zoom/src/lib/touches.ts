@@ -48,6 +48,9 @@ export class Touches {
     private i: number = 0;
     private isMousedown = false;
 
+    // Store bound event handlers to prevent memory leaks
+    private boundHandlers = new Map<string, EventListener>();
+
     private _touchListeners: Record<'touchstart' | 'touchmove' | 'touchend', TouchHandler> = {
         touchstart: 'handleTouchstart',
         touchmove: 'handleTouchmove',
@@ -107,32 +110,31 @@ export class Touches {
             const method = this[handler as keyof this];
             if (typeof method !== 'function') continue;
 
-            const boundMethod = method.bind(this);
+            let boundMethod: EventListener;
 
-            // Window
-            if (listener === 'resize') {
-                if (action === 'addEventListener') {
-                    window.addEventListener(listener, boundMethod as EventListener, false);
-                }
-                if (action === 'removeEventListener') {
-                    window.removeEventListener(listener, boundMethod as EventListener, false);
-                }
-                // Document
-            } else if (listener === 'mouseup' || listener === 'mousemove') {
-                if (action === 'addEventListener') {
-                    document.addEventListener(listener, boundMethod as EventListener, false);
-                }
-                if (action === 'removeEventListener') {
-                    document.removeEventListener(listener, boundMethod as EventListener, false);
-                }
-                // Element
+            if (action === 'addEventListener') {
+                // Create and store the bound method
+                boundMethod = method.bind(this) as EventListener;
+                this.boundHandlers.set(listener, boundMethod);
             } else {
-                if (action === 'addEventListener') {
-                    this.element.addEventListener(listener, boundMethod as EventListener, false);
-                }
-                if (action === 'removeEventListener') {
-                    this.element.removeEventListener(listener, boundMethod as EventListener, false);
-                }
+                // Retrieve the stored bound method
+                const storedHandler = this.boundHandlers.get(listener);
+                if (!storedHandler) continue; // Skip if no handler was stored
+                boundMethod = storedHandler;
+            }
+
+            // Determine target element (Window, Document, or this.element)
+            const target =
+                listener === 'resize' ? window :
+                (listener === 'mouseup' || listener === 'mousemove') ? document :
+                this.element;
+
+            // Add or remove the listener
+            if (action === 'addEventListener') {
+                target.addEventListener(listener, boundMethod, false);
+            } else {
+                target.removeEventListener(listener, boundMethod, false);
+                this.boundHandlers.delete(listener); // Clean up
             }
         }
     }
@@ -143,17 +145,22 @@ export class Touches {
 
         const method = this[handler as keyof this];
         if (typeof method === 'function') {
-            window.addEventListener(listener, method.bind(this) as EventListener, false);
+            // Create a unique key for dynamically added listeners
+            const key = `dynamic-${listener}`;
+            const boundMethod = method.bind(this) as EventListener;
+            this.boundHandlers.set(key, boundMethod);
+            window.addEventListener(listener, boundMethod, false);
         }
     }
 
     public removeEventListeners(listener: string): void {
-        const handler = this._mouseListeners[listener as keyof typeof this._mouseListeners];
-        if (!handler) return;
+        // Try to retrieve the dynamically added listener
+        const key = `dynamic-${listener}`;
+        const boundMethod = this.boundHandlers.get(key);
 
-        const method = this[handler as keyof this];
-        if (typeof method === 'function') {
-            window.removeEventListener(listener, method.bind(this) as EventListener, false);
+        if (boundMethod) {
+            window.removeEventListener(listener, boundMethod, false);
+            this.boundHandlers.delete(key);
         }
     }
 
