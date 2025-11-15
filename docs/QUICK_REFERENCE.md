@@ -25,8 +25,20 @@ Fast lookup reference for ngx-pinch-zoom maintainers. For detailed explanations,
 
 ### Data Flow
 
-```
-User Input → Touches (detect gesture) → IvyPinch (calculate transform) → DOM Update → Signal Update → Event Emission
+```mermaid
+graph LR
+    A[User Input]:::userStyle --> B[Touches<br/>detect gesture]:::touchStyle
+    B --> C[IvyPinch<br/>calculate transform]:::logicStyle
+    C --> D[DOM Update]:::domStyle
+    D --> E[Signal Update]:::signalStyle
+    E --> F[Event Emission]:::eventStyle
+
+    classDef userStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef touchStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef logicStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef domStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef signalStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef eventStyle fill:#db61a2,stroke:#f778ba,color:#fff
 ```
 
 ### Transform Mathematics
@@ -346,52 +358,48 @@ detectDoubleTap(): boolean {
 
 ### Touch Event Flow
 
-```
-User touches screen
-    ↓
-touchstart event
-    ↓
-Touches.handleTouchStart()
-    ↓
-Store initial position
-    ↓
-User moves fingers
-    ↓
-touchmove event
-    ↓
-Touches.handleTouchMove()
-    ↓
-Touches.detectGesture()
-    ↓
-[Determines: pinch | pan | doubletap]
-    ↓
-Sets eventType
-    ↓
-Emits event via handler
-    ↓
-IvyPinch.handlePinch() or handlePan()
-    ↓
-Calculate new scale/position
-    ↓
-Apply constraints
-    ↓
-IvyPinch.transformElement()
-    ↓
-Update element.style.transform
-    ↓
-Call zoomChanged callback
-    ↓
-Component updates signals
-    ↓
-User lifts fingers
-    ↓
-touchend event
-    ↓
-Touches.handleTouchEnd()
-    ↓
-Reset eventType
-    ↓
-Done
+```mermaid
+flowchart TD
+    A[User touches screen]:::userAction --> B[touchstart event]:::browserEvent
+    B --> C[Touches.handleTouchStart]:::touchHandler
+    C --> D[Store initial position]:::stateUpdate
+    D --> E[User moves fingers]:::userAction
+    E --> F[touchmove event]:::browserEvent
+    F --> G[Touches.handleTouchMove]:::touchHandler
+    G --> H[Touches.detectGesture]:::detection
+    H --> I{Determines gesture type}:::decision
+    I -->|pinch| J[Sets eventType = 'pinch']:::stateUpdate
+    I -->|pan| K[Sets eventType = 'pan']:::stateUpdate
+    I -->|doubletap| L[Sets eventType = 'tap']:::stateUpdate
+    J --> M[Emits event via handler]:::emission
+    K --> M
+    L --> M
+    M --> N[IvyPinch.handlePinch/handlePan]:::logicHandler
+    N --> O[Calculate new scale/position]:::calculation
+    O --> P[Apply constraints]:::calculation
+    P --> Q[IvyPinch.transformElement]:::domUpdate
+    Q --> R[Update element.style.transform]:::domUpdate
+    R --> S[Call zoomChanged callback]:::callback
+    S --> T[Component updates signals]:::signalUpdate
+    T --> U[User lifts fingers]:::userAction
+    U --> V[touchend event]:::browserEvent
+    V --> W[Touches.handleTouchEnd]:::touchHandler
+    W --> X[Reset eventType]:::stateUpdate
+    X --> Y[Done]:::end
+
+    classDef userAction fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef browserEvent fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef touchHandler fill:#3fb950,stroke:#56d364,color:#fff
+    classDef stateUpdate fill:#d29922,stroke:#e3b341,color:#fff
+    classDef detection fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef decision fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef emission fill:#bc8cff,stroke:#d2a8ff,color:#fff
+    classDef logicHandler fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef calculation fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef domUpdate fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef callback fill:#d29922,stroke:#e3b341,color:#fff
+    classDef signalUpdate fill:#d29922,stroke:#e3b341,color:#fff
+    classDef end fill:#3fb950,stroke:#56d364,color:#fff
 ```
 
 ## Testing Scenarios

@@ -19,50 +19,59 @@ Deep dive into how ngx-pinch-zoom works internally. For quick lookups, see [QUIC
 
 ### High-Level Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    PinchZoomComponent                        │
-│                   (Angular Component)                        │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Input Signals       Computed Signals    Output      │  │
-│  │  ↓                   ↓                    Signals     │  │
-│  │  disabled()          isZoomedIn()         ↓           │  │
-│  │  limitZoom()         maxScale()           zoomChanged │  │
-│  │  doubleTap()         isControl()                      │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                          ↓                                   │
-│                   mergedProperties                           │
-│                          ↓                                   │
-└──────────────────────────┼──────────────────────────────────┘
-                           ↓
-┌──────────────────────────┼──────────────────────────────────┐
-│                       IvyPinch                               │
-│                   (Core Logic - Pure TS)                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Properties    State         Transform Methods       │  │
-│  │  ↓             ↓             ↓                        │  │
-│  │  limitZoom     scale         transformElement()      │  │
-│  │  doubleTap     moveX/moveY   handlePinch()           │  │
-│  │  ...           distance      handlePan()              │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                          ↓                                   │
-│                       Touches                                │
-│                          ↓                                   │
-└──────────────────────────┼──────────────────────────────────┘
-                           ↓
-┌──────────────────────────┼──────────────────────────────────┐
-│                       Touches                                │
-│                (Event Detection - Pure TS)                   │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Event Listeners   Gesture Detection  Event Emission │  │
-│  │  ↓                 ↓                   ↓              │  │
-│  │  touchstart        detectPinch()       emit('pinch') │  │
-│  │  touchmove         detectPan()         emit('pan')   │  │
-│  │  touchend          detectDoubleTap()   emit('tap')   │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                           ↓
-                    Browser DOM/Events
+```mermaid
+graph TB
+    subgraph Component["PinchZoomComponent<br/>(Angular Component)"]
+        direction TB
+        Inputs["<b>Input Signals</b><br/>disabled()<br/>limitZoom()<br/>doubleTap()"]:::inputStyle
+        Computed["<b>Computed Signals</b><br/>isZoomedIn()<br/>maxScale()<br/>isControl()"]:::computedStyle
+        Outputs["<b>Output Signals</b><br/>zoomChanged"]:::outputStyle
+        Merged["mergedProperties"]:::mergedStyle
+
+        Inputs -.-> Merged
+        Inputs -.-> Computed
+        Merged --> CoreLogic
+    end
+
+    subgraph IvyPinchBox["IvyPinch<br/>(Core Logic - Pure TS)"]
+        direction TB
+        CoreLogic["<b>Properties</b><br/>limitZoom<br/>doubleTap"]:::propsStyle
+        State["<b>State</b><br/>scale<br/>moveX/moveY<br/>distance"]:::stateStyle
+        Methods["<b>Transform Methods</b><br/>transformElement()<br/>handlePinch()<br/>handlePan()"]:::methodsStyle
+
+        CoreLogic --> State
+        State --> Methods
+        Methods --> TouchesBox
+    end
+
+    subgraph TouchesBox["Touches<br/>(Event Detection - Pure TS)"]
+        direction TB
+        Listeners["<b>Event Listeners</b><br/>touchstart<br/>touchmove<br/>touchend"]:::listenersStyle
+        Detection["<b>Gesture Detection</b><br/>detectPinch()<br/>detectPan()<br/>detectDoubleTap()"]:::detectionStyle
+        Emission["<b>Event Emission</b><br/>emit('pinch')<br/>emit('pan')<br/>emit('tap')"]:::emissionStyle
+
+        Listeners --> Detection
+        Detection --> Emission
+        Emission -.-> Methods
+    end
+
+    DOM["Browser DOM/Events"]:::domStyle
+    TouchesBox --> DOM
+    DOM -.-> Listeners
+
+    Methods -.-> Outputs
+
+    classDef inputStyle fill:#58a6ff,stroke:#79c0ff,color:#fff,stroke-width:2px
+    classDef computedStyle fill:#d29922,stroke:#e3b341,color:#fff,stroke-width:2px
+    classDef outputStyle fill:#db61a2,stroke:#f778ba,color:#fff,stroke-width:2px
+    classDef mergedStyle fill:#a371f7,stroke:#d29eff,color:#fff,stroke-width:2px
+    classDef propsStyle fill:#58a6ff,stroke:#79c0ff,color:#fff,stroke-width:2px
+    classDef stateStyle fill:#3fb950,stroke:#56d364,color:#fff,stroke-width:2px
+    classDef methodsStyle fill:#58a6ff,stroke:#79c0ff,color:#fff,stroke-width:2px
+    classDef listenersStyle fill:#bc8cff,stroke:#d2a8ff,color:#fff,stroke-width:2px
+    classDef detectionStyle fill:#3fb950,stroke:#56d364,color:#fff,stroke-width:2px
+    classDef emissionStyle fill:#db61a2,stroke:#f778ba,color:#fff,stroke-width:2px
+    classDef domStyle fill:#f85149,stroke:#ff7b72,color:#fff,stroke-width:2px
 ```
 
 ### Design Principles
@@ -197,81 +206,74 @@ class Touches {
 
 ### Complete User Interaction Flow
 
-```
-1. USER TOUCHES SCREEN
-   ↓
-2. Browser fires touchstart event
-   ↓
-3. Touches.handleTouchStart(event)
-   → Stores initial touch positions
-   → Sets touches array
-   ↓
-4. USER MOVES FINGERS (pinch gesture)
-   ↓
-5. Browser fires touchmove event (many times per second)
-   ↓
-6. Touches.handleTouchMove(event)
-   → Calculates current touch positions
-   → Calculates distance between fingers
-   ↓
-7. Touches.detectGesture()
-   → Determines gesture type
-   → Sets eventType = 'pinch'
-   ↓
-8. Touches.emit('pinch', event)
-   → Calls registered handler
-   ↓
-9. IvyPinch.handlePinch(event)
-   → Calculates scale from distance ratio
-   → Applies constraints
-   → Updates this.scale, this.moveX, this.moveY
-   ↓
-10. IvyPinch.transformElement()
-   → Builds CSS transform string
-   → Updates element.style.transform
-   ↓
-11. Browser renders transform (GPU accelerated)
-   ↓
-12. IvyPinch calls zoomChanged callback
-   ↓
-13. PinchZoomComponent.handleScaleCallback(scale)
-   → Updates currentScale signal
-   → currentScale.set(scale)
-   ↓
-14. Signal updates propagate
-   → isZoomedIn computed signal recalculates
-   → Angular change detection (if needed)
-   ↓
-15. Component emits output
-   → zoomChanged.emit(scale)
-   ↓
-16. USER LIFTS FINGERS
-   ↓
-17. Browser fires touchend event
-   ↓
-18. Touches.handleTouchEnd()
-   → Resets eventType
-   → Clears gesture state
-   ↓
-   DONE
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Touches
+    participant IvyPinch
+    participant Component
+
+    User->>Browser: 1. Touch screen
+    Browser->>Touches: 2. touchstart event
+    Note over Touches: 3. handleTouchStart()<br/>Store initial positions<br/>Set touches array
+
+    User->>Browser: 4. Move fingers (pinch)
+    Browser->>Touches: 5. touchmove event<br/>(many times/second)
+    Note over Touches: 6. handleTouchMove()<br/>Calculate positions<br/>Calculate distance
+
+    Touches->>Touches: 7. detectGesture()<br/>Determine type<br/>Set eventType='pinch'
+    Touches->>IvyPinch: 8. emit('pinch', event)
+
+    Note over IvyPinch: 9. handlePinch()<br/>Calculate scale ratio<br/>Apply constraints<br/>Update scale, moveX, moveY
+
+    Note over IvyPinch: 10. transformElement()<br/>Build CSS transform<br/>Update element.style.transform
+
+    IvyPinch->>Browser: 11. Apply transform
+    Note over Browser: GPU accelerated rendering
+
+    IvyPinch->>Component: 12. zoomChanged(scale)
+    Note over Component: 13. handleScaleCallback()<br/>currentScale.set(scale)
+
+    Note over Component: 14. Signal propagation<br/>isZoomedIn recomputes<br/>Change detection (if needed)
+
+    Component->>User: 15. emit zoomChanged event
+
+    User->>Browser: 16. Lift fingers
+    Browser->>Touches: 17. touchend event
+    Note over Touches: 18. handleTouchEnd()<br/>Reset eventType<br/>Clear gesture state
+
+    Note over Touches: DONE
+
+    %% Colors for dark mode
+    participant User as User
+    participant Browser as Browser
+    participant Touches as Touches
+    participant IvyPinch as IvyPinch
+    participant Component as Component
 ```
 
 ### Signal Reactivity Flow
 
-```
-User sets [limitZoom]="5"
-   ↓
-limitZoom signal updates
-   ↓
-mergedProperties computed signal recalculates
-   ↓
-effect() runs
-   ↓
-IvyPinch.properties updated
-   ↓
-maxScale recalculated
-   ↓
-Next pinch gesture respects new limit
+```mermaid
+flowchart TD
+    A[User sets limitZoom=5]:::userStyle
+    B[limitZoom signal updates]:::signalStyle
+    C[mergedProperties recomputes]:::computedStyle
+    D[effect runs]:::effectStyle
+    E[IvyPinch.properties updated]:::updateStyle
+    F[maxScale recalculated]:::calcStyle
+    G[Next pinch gesture<br/>respects new limit]:::resultStyle
+
+    A --> B --> C --> D --> E --> F --> G
+
+    classDef userStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef signalStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef computedStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef effectStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef updateStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef calcStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef resultStyle fill:#3fb950,stroke:#56d364,color:#fff
 ```
 
 ## Signal Architecture
@@ -512,51 +514,43 @@ handlePinch(event: any) {
 
 #### Gesture Detection State Machine
 
-```
-┌─────────────┐
-│   IDLE      │
-│ eventType = │
-│  undefined  │
-└──────┬──────┘
-       │
-       │ touchstart
-       ↓
-┌─────────────┐
-│  TOUCHED    │
-│  Waiting    │
-└──────┬──────┘
-       │
-       │ touchmove (2 fingers)
-       ↓
-┌─────────────┐      ┌──────────────┐
-│   PINCH     │      │  touchmove   │
-│ eventType = │←─────┤ (1 finger)   │
-│  'pinch'    │      │              │
-└──────┬──────┘      ↓              │
-       │       ┌─────────────┐      │
-       │       │    PAN      │      │
-       │       │ eventType = │──────┘
-       │       │   'pan'     │
-       │       └──────┬──────┘
-       │              │
-       │ touchend     │ touchend
-       ↓              ↓
-┌─────────────────────────┐
-│      RELEASED           │
-│  Check for double-tap   │
-└────────────┬────────────┘
-             │
-             │ If rapid tap
-             ↓
-     ┌──────────────┐
-     │ DOUBLE TAP   │
-     │ eventType =  │
-     │   'tap'      │
-     └──────┬───────┘
-            │
-            │
-            ↓
-       Back to IDLE
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+
+    IDLE: IDLE<br/>eventType = undefined
+    IDLE --> TOUCHED: touchstart
+
+    TOUCHED: TOUCHED<br/>Waiting for movement
+    TOUCHED --> PINCH: touchmove<br/>(2 fingers)
+    TOUCHED --> PAN: touchmove<br/>(1 finger)
+
+    PINCH: PINCH<br/>eventType = 'pinch'
+    PINCH --> RELEASED: touchend
+
+    PAN: PAN<br/>eventType = 'pan'
+    PAN --> RELEASED: touchend
+
+    RELEASED: RELEASED<br/>Check for double-tap
+    RELEASED --> DOUBLETAP: rapid tap detected
+    RELEASED --> IDLE: normal release
+
+    DOUBLETAP: DOUBLE TAP<br/>eventType = 'tap'
+    DOUBLETAP --> IDLE
+
+    classDef idleStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef touchedStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef pinchStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef panStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef releasedStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef tapStyle fill:#a371f7,stroke:#d29eff,color:#fff
+
+    class IDLE idleStyle
+    class TOUCHED touchedStyle
+    class PINCH pinchStyle
+    class PAN panStyle
+    class RELEASED releasedStyle
+    class DOUBLETAP tapStyle
 ```
 
 #### Touch Distance Calculation
@@ -854,61 +848,53 @@ if (this.properties.limitPan) {
 
 ### Component Lifecycle
 
-```
-Component Created
-  ↓
-constructor() runs
-  - Inject dependencies
-  - Set up effects
-  ↓
-ngOnInit() runs
-  - Create IvyPinch instance
-  - Event listeners attached
-  - Ready for interaction
-  ↓
-User interacts
-  - Pinch, pan, tap
-  - Signals update
-  - Events emit
-  ↓
-Input signal changes
-  - mergedProperties recomputes
-  - Effect runs
-  - IvyPinch updated
-  ↓
-Component Destroyed
-  ↓
-ngOnDestroy() runs
-  - Call pinchZoom.destroy()
-  - Remove event listeners
-  - Clear references
-  ↓
-Memory freed
+```mermaid
+flowchart TD
+    A[Component Created]:::createStyle
+    B["constructor() runs<br/>• Inject dependencies<br/>• Set up effects"]:::initStyle
+    C["ngOnInit() runs<br/>• Create IvyPinch instance<br/>• Event listeners attached<br/>• Ready for interaction"]:::initStyle
+    D["User interacts<br/>• Pinch, pan, tap<br/>• Signals update<br/>• Events emit"]:::interactStyle
+    E["Input signal changes<br/>• mergedProperties recomputes<br/>• Effect runs<br/>• IvyPinch updated"]:::updateStyle
+    F[Component Destroyed]:::destroyStyle
+    G["ngOnDestroy() runs<br/>• Call pinchZoom.destroy()<br/>• Remove event listeners<br/>• Clear references"]:::cleanupStyle
+    H[Memory freed]:::endStyle
+
+    A --> B --> C --> D
+    D --> E
+    E --> D
+    D --> F
+    F --> G --> H
+
+    classDef createStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef initStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef interactStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef updateStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef destroyStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef cleanupStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef endStyle fill:#3fb950,stroke:#56d364,color:#fff
 ```
 
 ### Event Listener Lifecycle
 
-```
-IvyPinch created
-  ↓
-Touches instance created
-  ↓
-Event listeners registered
-  - element.addEventListener('touchstart', ...)
-  - element.addEventListener('touchmove', ...)
-  - element.addEventListener('touchend', ...)
-  - (same for mouse events)
-  ↓
-Events fire and are handled
-  ↓
-destroy() called
-  ↓
-Listeners removed
-  - element.removeEventListener('touchstart', ...)
-  - element.removeEventListener('touchmove', ...)
-  - etc.
-  ↓
-No memory leaks!
+```mermaid
+flowchart TD
+    A[IvyPinch created]:::createStyle
+    B[Touches instance created]:::instanceStyle
+    C["Event listeners registered<br/>• addEventListener('touchstart')<br/>• addEventListener('touchmove')<br/>• addEventListener('touchend')<br/>• (same for mouse events)"]:::registerStyle
+    D[Events fire and are handled]:::activeStyle
+    E[destroy called]:::destroyStyle
+    F["Listeners removed<br/>• removeEventListener('touchstart')<br/>• removeEventListener('touchmove')<br/>• etc."]:::cleanupStyle
+    G[No memory leaks!]:::successStyle
+
+    A --> B --> C --> D --> E --> F --> G
+
+    classDef createStyle fill:#58a6ff,stroke:#79c0ff,color:#fff
+    classDef instanceStyle fill:#3fb950,stroke:#56d364,color:#fff
+    classDef registerStyle fill:#d29922,stroke:#e3b341,color:#fff
+    classDef activeStyle fill:#a371f7,stroke:#d29eff,color:#fff
+    classDef destroyStyle fill:#f85149,stroke:#ff7b72,color:#fff
+    classDef cleanupStyle fill:#db61a2,stroke:#f778ba,color:#fff
+    classDef successStyle fill:#3fb950,stroke:#56d364,color:#fff
 ```
 
 ---
