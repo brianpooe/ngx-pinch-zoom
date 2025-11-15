@@ -69,6 +69,7 @@ docs/
 | Why isn't pan working?        | QUICK_REFERENCE.md → "Debugging Checklist"                |
 | What is `transformElement()`? | ARCHITECTURE.md → "Transform Mathematics"                 |
 | How to add rotation?          | IMPLEMENTATION_GUIDE.md → "Feature: Add Rotation Support" |
+| How click-to-zoom works?      | IMPLEMENTATION_GUIDE.md → "Feature: Click-to-Zoom"        |
 | Performance best practices?   | QUICK_REFERENCE.md → "Performance Tips"                   |
 | Event flow diagram?           | ARCHITECTURE.md → "Event System"                          |
 
@@ -77,6 +78,7 @@ docs/
 | Task                     | Document                                                                |
 | ------------------------ | ----------------------------------------------------------------------- |
 | Fix image jumping        | IMPLEMENTATION_GUIDE.md → "Bug: Image Jumps on First Touch"             |
+| Add click-to-zoom        | IMPLEMENTATION_GUIDE.md → "Feature: Click-to-Zoom"                      |
 | Add custom zoom behavior | IMPLEMENTATION_GUIDE.md → "Custom: Programmatic Zoom to Specific Point" |
 | Debug transforms         | IMPLEMENTATION_GUIDE.md → "Technique 1: Visual Transform Debugging"     |
 | Improve performance      | IMPLEMENTATION_GUIDE.md → "Performance Optimization"                    |

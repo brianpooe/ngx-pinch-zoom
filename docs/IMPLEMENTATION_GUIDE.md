@@ -473,6 +473,183 @@ ngOnDestroy(): void {
 6. Compare snapshots
 7. Verify no PinchZoomComponent instances retained
 
+### Feature: Click-to-Zoom (Real-World Example)
+
+This is a complete, real implementation added to the library for anomaly detection and defect inspection use cases.
+
+**Goal**: Allow users to click any point on the image to zoom to that exact location, perfect for quickly examining suspicious areas in images.
+
+#### Step 1: Add Input Signals
+
+**File: `pinch-zoom.component.ts`**
+
+```typescript
+export class PinchZoomComponent implements OnInit, OnDestroy {
+    // ... existing inputs
+
+    // Click-to-zoom inputs
+    enableClickToZoom = input<boolean>(false);
+    clickToZoomScale = input<number>(2.5);
+
+    // ... rest of class
+}
+```
+
+**Why this works**:
+
+- `enableClickToZoom` - Feature flag to avoid interfering with existing functionality
+- `clickToZoomScale` - Configurable zoom level (default 2.5x is good for defect inspection)
+
+#### Step 2: Add zoomToPoint Method to IvyPinch
+
+**File: `ivypinch.ts`**
+
+```typescript
+export class IvyPinch {
+    // Add after zoomOut() method
+
+    public zoomToPoint(clientX: number, clientY: number, targetScale: number): void {
+        // Update element position
+        this.getElementPosition();
+
+        // Calculate the click point relative to the element
+        const xRelativeToElement = clientX - this.elementPosition.left;
+        const yRelativeToElement = clientY - this.elementPosition.top;
+
+        // Clamp target scale to limits
+        let newScale = targetScale;
+        if (newScale > this.maxScale) {
+            newScale = this.maxScale;
+        }
+        if (newScale < (this.properties.minScale || 0)) {
+            newScale = this.properties.minScale || 0;
+        }
+
+        // If already at target scale or zoomed in, reset zoom
+        if (this.scale >= targetScale || this.scale > 1) {
+            this.resetScale();
+            return;
+        }
+
+        // Calculate the new position to keep the clicked point centered
+        this.scale = newScale;
+        this.zoomChanged(this.scale);
+
+        // Calculate the zoom offset to keep clicked point under cursor
+        const scaleRatio = newScale / this.initialScale;
+        this.moveX = this.initialMoveX - xRelativeToElement * (scaleRatio - 1);
+        this.moveY = this.initialMoveY - yRelativeToElement * (scaleRatio - 1);
+
+        this.centeringImage();
+        this.updateInitialValues();
+        this.transformElement(this.properties.transitionDuration || 200);
+    }
+}
+```
+
+**Key points**:
+
+- Uses `getElementPosition()` to get fresh position (element may have moved)
+- Calculates click position relative to element bounds
+- Applies zoom offset to keep clicked point under cursor
+- Respects min/max scale limits
+- Smooth animation using existing transition duration
+
+#### Step 3: Add Component Wrapper Method
+
+**File: `pinch-zoom.component.ts`**
+
+```typescript
+export class PinchZoomComponent implements OnInit, OnDestroy {
+    // ... existing methods
+
+    zoomToPoint(event: MouseEvent): void {
+        if (!this.enableClickToZoom() || this.isDisabled()) {
+            return;
+        }
+
+        // Prevent default to avoid conflicts
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Get click coordinates
+        const clientX = event.clientX;
+        const clientY = event.clientY;
+
+        // Call IvyPinch method with target scale
+        this.pinchZoom?.zoomToPoint(clientX, clientY, this.clickToZoomScale());
+    }
+}
+```
+
+**Why this works**:
+
+- Checks feature flag and disabled state
+- Prevents event propagation to avoid conflicts with other gestures
+- Delegates to IvyPinch for actual zoom logic
+
+#### Step 4: Add Click Handler to Template
+
+**File: `pinch-zoom.component.html`**
+
+```html
+<div
+    class="pinch-zoom-content"
+    [class.pz-dragging]="isDragging()"
+    [class.pz-click-to-zoom]="enableClickToZoom()"
+    (click)="enableClickToZoom() ? zoomToPoint($event) : null"
+>
+    <ng-content></ng-content>
+</div>
+```
+
+**Key points**:
+
+- Conditional click handler (only active when enabled)
+- CSS class for visual feedback (cursor changes)
+- Works alongside existing touch/pan gestures
+
+#### Step 5: Add CSS Cursor Feedback
+
+**File: `pinch-zoom.component.sass`**
+
+```sass
+.pz-click-to-zoom
+  cursor: zoom-in
+
+.pz-click-to-zoom.pz-dragging
+  cursor: all-scroll  // Dragging takes priority
+```
+
+**UX improvement**: User knows they can click to zoom when cursor changes
+
+#### Result
+
+Users can now:
+
+1. Enable click-to-zoom with `[enableClickToZoom]="true"`
+2. Click any suspicious area on the image
+3. Image zooms to 2.5x with clicked point centered
+4. Click again to zoom out
+5. Works perfectly with brightness control for defect inspection
+
+**Real-world usage**:
+
+```html
+<pinch-zoom [enableClickToZoom]="true" [clickToZoomScale]="2.5" [enableBrightnessControl]="true">
+    <img src="product-defect-scan.jpg" />
+</pinch-zoom>
+```
+
+**Testing checklist**:
+
+- ✅ Click to zoom in to point
+- ✅ Click again to zoom out
+- ✅ Respects max zoom limit
+- ✅ Works with pan gesture
+- ✅ Cursor shows zoom-in icon
+- ✅ Disabled when `disabled=true`
+
 ## Common Customizations
 
 ### Custom: Programmatic Zoom to Specific Point
