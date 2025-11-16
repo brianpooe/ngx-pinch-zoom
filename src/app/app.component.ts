@@ -33,10 +33,7 @@ export class AppComponent {
     private readonly MAX_BRIGHTNESS = 3.0;
 
     // Computed signals for button states
-    isZoomAtMin = computed(() => {
-        const zoom = this.customZoomState();
-        return zoom <= this.MIN_ZOOM + 0.01; // Small tolerance for float comparison
-    });
+    isZoomAtMin = computed(() => this.customZoomState() <= this.MIN_ZOOM);
 
     isBrightnessAtMin = computed(() => this.customBrightnessState() <= this.MIN_BRIGHTNESS);
     isBrightnessAtMax = computed(() => this.customBrightnessState() >= this.MAX_BRIGHTNESS);
