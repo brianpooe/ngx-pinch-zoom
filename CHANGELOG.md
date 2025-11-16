@@ -148,11 +148,11 @@ For users upgrading from previous versions:
 ```
 lib/
 ├── models/                     # All data models and interfaces
-├── services/                   # Business logic and utility classes
-│   ├── brightness.service.ts   # Angular service
-│   ├── zoom-state.service.ts   # Angular service
-│   ├── ivy-pinch.service.ts    # Core zoom logic (utility class)
-│   └── touches.service.ts      # Gesture detection (utility class)
+├── services/                   # Business logic (all Angular services)
+│   ├── brightness.service.ts   # Angular service for brightness state management
+│   ├── zoom-state.service.ts   # Angular service for zoom state management
+│   ├── ivy-pinch.service.ts    # Angular service for core zoom/pan engine
+│   └── touches.service.ts      # Angular service for gesture detection
 └── components/
     ├── containers/             # Smart components (with DI)
     └── presentational/         # Dumb components (pure UI)
