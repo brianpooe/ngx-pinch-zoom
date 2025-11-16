@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 /**
  * Properties interface for Touches gesture detection.
  */
@@ -36,14 +38,14 @@ export type MouseListeners = Partial<Record<'mousedown' | 'mousemove' | 'mouseup
 export type OtherListeners = Partial<Record<'resize', OtherHandler>>;
 
 /**
- * Touch and mouse gesture detection utility class.
- * Instantiated directly with 'new Touches(properties)'.
- * Not an Angular service - does not use dependency injection.
+ * Touch and mouse gesture detection Angular service.
+ * Provided at component level for proper instance scoping.
  */
-export class Touches {
-    private properties: TouchProperties;
-    private element: HTMLElement;
-    private elementPosition: DOMRect;
+@Injectable()
+export class TouchesService {
+    private properties!: TouchProperties;
+    private element!: HTMLElement;
+    private elementPosition!: DOMRect;
     private eventType: EventType = undefined;
     private handlers: TouchListeners | MouseListeners | OtherListeners = {};
     private startX = 0;
@@ -86,7 +88,11 @@ export class Touches {
         return this.properties.otherListeners ? this.properties.otherListeners : this._otherListeners;
     }
 
-    constructor(properties: TouchProperties) {
+    /**
+     * Initializes the Touches service with configuration.
+     * Must be called before using any other methods.
+     */
+    init(properties: TouchProperties): void {
         this.properties = properties;
         this.element = this.properties.element;
         this.elementPosition = this.getElementPosition();
@@ -95,7 +101,9 @@ export class Touches {
     }
 
     public destroy(): void {
-        this.toggleEventListeners('removeEventListener');
+        if (this.properties) {
+            this.toggleEventListeners('removeEventListener');
+        }
     }
 
     private toggleEventListeners(action: 'addEventListener' | 'removeEventListener'): void {

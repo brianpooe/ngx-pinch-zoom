@@ -1,8 +1,8 @@
 /**
- * @fileoverview IvyPinch - Core Zoom & Pan Engine
+ * @fileoverview IvyPinchService - Core Zoom & Pan Engine
  *
  * @description
- * Utility class that handles pinch-to-zoom, pan, and mouse wheel zoom gestures.
+ * Angular service that handles pinch-to-zoom, pan, and mouse wheel zoom gestures.
  * This is the core logic engine that powers the ngx-pinch-zoom component.
  *
  * **Key Responsibilities:**
@@ -13,8 +13,9 @@
  * - Notify component of state changes via callback
  *
  * **Architecture:**
- * - Utility class instantiated with 'new' (not an Angular service)
- * - Uses {@link Touches} class for gesture detection
+ * - Angular service with @Injectable decorator
+ * - Provided at component level for proper scoping
+ * - Uses {@link TouchesService} for gesture detection
  * - Communicates with component via callback function
  * - Manipulates DOM directly via element.style
  *
@@ -29,26 +30,37 @@
  *
  * @example
  * ```typescript
- * const ivyPinch = new IvyPinch(
- *   {
- *     element: containerElement,
- *     doubleTap: true,
- *     limitZoom: 4,
- *   },
- *   (scale) => console.log('Zoom changed:', scale)
- * );
+ * @Component({
+ *   providers: [IvyPinchService]
+ * })
+ * class MyComponent {
+ *   private ivyPinch = inject(IvyPinchService);
+ *
+ *   ngOnInit() {
+ *     this.ivyPinch.init(
+ *       {
+ *         element: containerElement,
+ *         doubleTap: true,
+ *         limitZoom: 4,
+ *       },
+ *       (scale) => console.log('Zoom changed:', scale)
+ *     );
+ *   }
+ * }
  * ```
  */
 
-import { EventType, Touches } from './touches.service';
+import { Injectable, inject } from '@angular/core';
+import { EventType, TouchesService } from './touches.service';
 import { Properties, defaultProperties } from '../models';
 
 /**
- * Core pinch-zoom logic utility class.
- * Instantiated directly with 'new IvyPinch(properties, callback)'.
- * Not an Angular service - does not use dependency injection.
+ * Core pinch-zoom logic service.
+ * Provided at component level for proper instance scoping.
  */
-export class IvyPinch {
+@Injectable()
+export class IvyPinchService {
+    private readonly touchesService = inject(TouchesService);
     // ========================================================================
     // CONFIGURATION
     // ========================================================================
@@ -57,7 +69,7 @@ export class IvyPinch {
      * Merged configuration properties from defaults and user input.
      * Contains all settings like limitZoom, doubleTap, listeners, etc.
      */
-    private readonly properties: Properties = defaultProperties;
+    private properties: Properties = defaultProperties;
 
     // ========================================================================
     // EVENT HANDLING
@@ -67,7 +79,7 @@ export class IvyPinch {
      * Touch and mouse event handler instance.
      * Detects gestures and emits typed events (pinch, pan, tap, wheel).
      */
-    private touches!: Touches;
+    private touches!: TouchesService;
 
     /**
      * Current event type being processed.
@@ -82,15 +94,14 @@ export class IvyPinch {
     /**
      * The container element being transformed.
      * This is the element we apply CSS transforms to.
-     * @public Exposed for component access
      */
-    private readonly element: HTMLElement;
+    private element!: HTMLElement;
 
     /**
      * Tag name of the target element inside container.
      * Usually 'IMG' but could be any element (DIV, SVG, etc.).
      */
-    private readonly elementTarget!: string;
+    private elementTarget!: string;
 
     /**
      * Parent element of the container.
@@ -218,8 +229,9 @@ export class IvyPinch {
     /**
      * Callback function invoked when zoom scale changes.
      * Component uses this to emit zoomChanged event.
+     * Initialized in init() method.
      */
-    private zoomChanged: (scale: number) => void;
+    private zoomChanged!: (scale: number) => void;
 
     // ========================================================================
     // COMPUTED PROPERTIES
@@ -242,11 +254,12 @@ export class IvyPinch {
     }
 
     // ========================================================================
-    // CONSTRUCTOR
+    // INITIALIZATION
     // ========================================================================
 
     /**
-     * Creates a new IvyPinch instance.
+     * Initializes the IvyPinch service with configuration and callback.
+     * Must be called before using any other methods.
      *
      * @param properties - Configuration options for zoom behavior
      * @param zoomChanged - Callback invoked when scale changes
@@ -254,7 +267,7 @@ export class IvyPinch {
      *
      * @example
      * ```typescript
-     * const ivyPinch = new IvyPinch(
+     * this.ivyPinch.init(
      *   {
      *     element: document.querySelector('.zoom-container'),
      *     doubleTap: true,
@@ -265,9 +278,9 @@ export class IvyPinch {
      * );
      * ```
      */
-    constructor(properties: Properties, zoomChanged: (scale: number) => void) {
+    init(properties: Properties, zoomChanged: (scale: number) => void): void {
         if (!properties.element) {
-            throw new Error('IvyPinch: element property is required');
+            throw new Error('IvyPinchService: element property is required');
         }
 
         this.element = properties.element;
@@ -288,7 +301,7 @@ export class IvyPinch {
         this.detectLimitZoom();
 
         // Initialize touch/mouse event handler
-        this.touches = new Touches({
+        this.touchesService.init({
             element: this.element,
             listeners: properties.listeners,
             resize: properties.autoHeight,
@@ -298,6 +311,7 @@ export class IvyPinch {
                 wheel: 'handleWheel',
             },
         });
+        this.touches = this.touchesService;
 
         // Set initial styles
         this.setBasicStyles();
