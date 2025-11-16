@@ -2,24 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [20.0.0] - 2025-11-15
+## [20.0.0] - 2025-11-16
 
-### 🎉 Major Update: Angular 20 + Signals
+### 🎉 Complete Rewrite: Angular 20 + Professional Architecture
 
-This release modernizes the library with Angular 20 and signals API.
+This is a **complete rewrite** of ngx-pinch-zoom with Angular 20, signals API, and professional architecture patterns following Angular best practices.
 
-### ✨ Added
+### ✨ New Features
 
-- **Angular 20 Support**: Upgraded to Angular 20.0.0
-- **Signals API**: Complete migration to signals for inputs, outputs, and computed properties
-- **Modern Dependency Injection**: Using `inject()` function instead of constructor DI
-- **Computed Signals**: All derived state now uses `computed()` for better performance
-- **Effects**: Reactive property changes using `effect()` API
-- **TypeScript 5.8**: Updated to latest TypeScript with improved type safety
-- **Strict Mode**: Full TypeScript strict mode compliance
-- **Standalone Component**: No NgModule needed, fully standalone
-- **Comprehensive Documentation**: Added CONTRIBUTING.md with detailed maintainer guide
-- **Modern Build**: Updated to latest ng-packagr
+- **🎯 Click to Zoom**: Click any point on the image to zoom to that exact location - perfect for anomaly detection workflows
+- **☀️ Brightness Control**: Built-in brightness adjustment controls alongside zoom controls
+- **📁 Professional Architecture**: Clean folder structure with models/, services/, components/containers/, components/presentational/
+- **🎨 Smart/Dumb Components**: Explicit separation of container (smart) and presentational (dumb) components
+- **⚡ Angular 20 + Signals**: Complete rewrite using Angular 20 with modern signals API
+- **💉 Service-Based Architecture**: Business logic extracted into reusable Angular services
+- **🔄 Signal-Based State**: BrightnessService and ZoomStateService for reactive state management
+- **📚 Comprehensive JSDoc**: 778 lines of inline documentation explaining algorithms and architecture
+- **🏗️ TypeScript 5.8**: Latest TypeScript with full strict mode compliance
+- **📦 Standalone Component**: No NgModule needed, fully standalone architecture
 
 ### 🔄 Changed
 
@@ -117,7 +117,7 @@ For users upgrading from previous versions:
 2. Update your package.json:
 
     ```bash
-    npm install @meddv/ngx-pinch-zoom@20.0.0
+    npm install ngx-pinch-zoom@20.0.0
     ```
 
 3. Template changes: None required! Input/output binding syntax remains the same.
@@ -142,13 +142,44 @@ For users upgrading from previous versions:
     const scale = this.pinchZoom()?.scale();
     ```
 
+### 🏗️ Architecture Changes
+
+**Professional Folder Structure:**
+```
+lib/
+├── models/                     # All data models and interfaces
+├── services/                   # Business logic and utility classes
+│   ├── brightness.service.ts   # Angular service
+│   ├── zoom-state.service.ts   # Angular service
+│   ├── ivy-pinch.service.ts    # Core zoom logic (utility class)
+│   └── touches.service.ts      # Gesture detection (utility class)
+└── components/
+    ├── containers/             # Smart components (with DI)
+    └── presentational/         # Dumb components (pure UI)
+```
+
+**Design Patterns Implemented:**
+- Smart/Dumb (Container/Presentational) component pattern
+- Service-based architecture for business logic
+- Signal-based reactive state management
+- Dependency injection throughout
+- Barrel exports for clean imports
+
 ### 🙏 Credits
 
-- Original library: [ngx-pinch-zoom](https://github.com/drozhzhin-n-e/ngx-pinch-zoom)
-- Modernization and Angular 20 upgrade: Claude Code
+This is a **complete rewrite** building on the foundation of the original ngx-pinch-zoom library.
+
+**Original Library Authors:**
+- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original ngx-pinch-zoom creator
+- [Konstantin Schütte](https://github.com/medDV-GmbH) - Angular 19 fork maintainer
+- [Björn Schmidt](https://github.com/medDV-GmbH) - Angular 19 fork contributor
+
+**Original Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
+
+**Current Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Complete Angular 20 rewrite with modern architecture
 
 ---
 
 ## Previous Versions
 
-For changelog of versions prior to 20.0.0, see the original repository.
+For changelog of versions prior to 20.0.0, see the [original repository](https://github.com/medDV-GmbH/ngx-pinch-zoom).

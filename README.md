@@ -21,7 +21,7 @@ An Angular library for pinch-to-zoom functionality on touch-enabled devices and 
 ## Installation
 
 ```bash
-npm install @meddv/ngx-pinch-zoom
+npm install ngx-pinch-zoom
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ npm install @meddv/ngx-pinch-zoom
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-root',
@@ -67,7 +67,7 @@ For proper touch support, add this to your `index.html`:
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-example',
@@ -99,7 +99,7 @@ export class ExampleComponent {
 
 ```typescript
 import { Component, viewChild } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-controls',
@@ -138,7 +138,7 @@ Enable click-to-zoom for quick inspection of specific areas:
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-click-zoom',
@@ -171,7 +171,7 @@ Enable brightness controls alongside zoom controls:
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-brightness',
@@ -200,7 +200,7 @@ Programmatic brightness control:
 
 ```typescript
 import { Component, viewChild } from '@angular/core';
-import { PinchZoomComponent } from '@meddv/ngx-pinch-zoom';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
 @Component({
     selector: 'app-brightness-controls',
@@ -369,16 +369,64 @@ If you're upgrading from a pre-signals version:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
+## Architecture
+
+This library follows Angular best practices with a clean, professional architecture:
+
+### Directory Structure
+
+```
+lib/
+├── models/                     # Data models and interfaces
+│   ├── interfaces.model.ts
+│   ├── properties.model.ts
+│   ├── zoom-config.model.ts
+│   ├── transform-state.model.ts
+│   ├── brightness-state.model.ts
+│   └── click-to-zoom.model.ts
+│
+├── services/                   # Business logic
+│   ├── brightness.service.ts   # Angular service for brightness state
+│   ├── zoom-state.service.ts   # Angular service for zoom state
+│   ├── ivy-pinch.service.ts    # Core zoom/pan logic
+│   └── touches.service.ts      # Gesture detection
+│
+└── components/
+    ├── containers/             # Smart components (with DI)
+    │   └── pinch-zoom/
+    │       ├── pinch-zoom.container.ts
+    │       ├── pinch-zoom.container.html
+    │       └── pinch-zoom.container.sass
+    │
+    └── presentational/         # Dumb components (pure UI)
+        ├── zoom-controls/
+        └── brightness-controls/
+```
+
+### Design Patterns
+
+- **Smart/Dumb Component Pattern**: Clear separation between container components (business logic) and presentational components (pure UI)
+- **Service-Based Architecture**: Business logic extracted into reusable Angular services
+- **Signal-Based Reactivity**: All state management uses Angular 20 signals for optimal performance
+- **Dependency Injection**: Proper use of Angular's DI system throughout
+
 ## License
 
 MIT
 
 ## Credits
 
-This project was forked and modernized for Angular 19/20 compatibility.
+This is a complete rewrite of the original ngx-pinch-zoom library, modernized for Angular 20 with signals API, professional architecture patterns, and additional features.
 
-Original library: [ngx-pinch-zoom](https://github.com/drozhzhin-n-e/ngx-pinch-zoom)
+**Original Library Authors:**
+- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original ngx-pinch-zoom creator
+- [Konstantin Schütte](https://github.com/medDV-GmbH) - Angular 19 fork maintainer
+- [Björn Schmidt](https://github.com/medDV-GmbH) - Angular 19 fork contributor
+
+**Original Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
+
+**Current Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Complete Angular 20 rewrite with modern architecture
 
 ## Issues and Support
 
-Please report issues on [GitHub Issues](https://github.com/yourusername/ngx-pinch-zoom/issues)
+Please report issues on [GitHub Issues](https://github.com/brianpooe/ngx-pinch-zoom/issues)
