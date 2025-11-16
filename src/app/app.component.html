@@ -287,8 +287,8 @@
     <div class="demo">
         <h2>enableBrightnessControl: true</h2>
         <p>
-            Enable brightness controls alongside zoom controls. Perfect for brightening dark images or examining details in shadows.
-            Controls appear at the bottom center of the image.
+            Enable brightness control button alongside zoom control. Click repeatedly to increment brightness until max, then reset to normal.
+            Icon changes from outline sun (normal) to filled sun (brightened). Controls appear at the bottom center of the image.
         </p>
         <p>Brightness State: {{ brightnessstate().toFixed(2) }}</p>
         <pinch-zoom [enableBrightnessControl]="true" (brightnessChanged)="onBrightnessChanged($event)">
@@ -301,7 +301,10 @@
     <!-- brightnessStep -->
     <div class="demo">
         <h2>brightnessStep: 0.2</h2>
-        <p>Brightness adjustment increment. Larger steps for faster adjustments. Default is 0.1.</p>
+        <p>
+            Brightness adjustment increment. Each click increases brightness by this amount. Larger steps = fewer clicks to reach max.
+            Default is 0.1.
+        </p>
         <p>Brightness State: {{ brightnessstate().toFixed(2) }}</p>
         <pinch-zoom [enableBrightnessControl]="true" [brightnessStep]="0.2" (brightnessChanged)="onBrightnessChanged($event)">
             <img
@@ -313,7 +316,9 @@
     <!-- minBrightness & maxBrightness -->
     <div class="demo">
         <h2>minBrightness: 0.5, maxBrightness: 1.5</h2>
-        <p>Limit the brightness range. Default range is 0.1 to 2.0.</p>
+        <p>
+            Limit the brightness range. Click button to increment from 1.0 to max (1.5), then reset to 1.0. Default range is 0.1 to 2.0.
+        </p>
         <p>Brightness State: {{ brightnessstate().toFixed(2) }}</p>
         <pinch-zoom
             [enableBrightnessControl]="true"
@@ -331,8 +336,8 @@
     <div class="demo">
         <h2>Combined: Click-to-zoom + Brightness Control</h2>
         <p>
-            Perfect for defect inspection and anomaly detection workflows. Click to zoom in on suspicious areas, adjust brightness to see
-            details.
+            Perfect for defect inspection and anomaly detection workflows. Click image to zoom in on suspicious areas, use brightness button
+            to incrementally brighten the image for better detail visibility. Each feature uses a single button for clean UX.
         </p>
         <p>Zoom State: {{ zoomstate() }} | Brightness State: {{ brightnessstate().toFixed(2) }}</p>
         <pinch-zoom

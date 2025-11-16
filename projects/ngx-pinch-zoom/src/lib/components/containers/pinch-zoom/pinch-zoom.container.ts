@@ -302,12 +302,12 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     }
 
     toggleBrightness(): void {
-        if (this.isBrightened()) {
-            // If brightness is increased, reset to normal
+        if (this.isBrightnessAtMax()) {
+            // If at max brightness, reset to normal
             this.brightnessService.reset();
         } else {
-            // If brightness is normal, set to max
-            this.brightnessService.setValue(this.maxBrightness());
+            // Increment brightness by step until max
+            this.brightnessService.increase();
         }
     }
 
