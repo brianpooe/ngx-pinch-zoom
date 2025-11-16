@@ -375,7 +375,7 @@
             behavior: minus buttons are disabled when at minimum (initial state), plus buttons reset to minimum when at maximum. Perfect for
             integrating controls into your own toolbar or UI layout.
         </p>
-        <p>Zoom State: {{ customPinch()?.scale().toFixed(2) || 1 }} | Brightness State: {{ customBrightnessState().toFixed(2) }}</p>
+        <p>Zoom State: {{ customZoomScale().toFixed(2) }} | Brightness State: {{ customBrightnessState().toFixed(2) }}</p>
         <pinch-zoom
             #customPinch="pinchZoom"
             [disableZoomControl]="'disable'"
