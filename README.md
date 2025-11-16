@@ -167,7 +167,7 @@ When enabled:
 
 ### Brightness Control
 
-Enable brightness controls alongside zoom controls:
+Enable brightness controls with a single toggle button:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -195,6 +195,12 @@ export class BrightnessComponent {
     }
 }
 ```
+
+**How the brightness button works:**
+- Click repeatedly to increase brightness by `brightnessStep` increments
+- Icon changes from outline sun (normal) to filled sun (brightened)
+- When max brightness is reached, clicking resets back to normal (1.0)
+- Consistent UX pattern with the zoom control
 
 Programmatic brightness control:
 
