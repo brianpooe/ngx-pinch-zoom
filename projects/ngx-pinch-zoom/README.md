@@ -160,14 +160,18 @@ This library modernizes the original ngx-pinch-zoom for Angular 20 while preserv
 - Service-based state management
 - Comprehensive JSDoc documentation
 
-**Original Library Authors:**
-- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original creator, core zoom algorithms
-- [Konstantin Schütte](https://github.com/medDV-GmbH) - Angular 19 fork maintainer
-- [Björn Schmidt](https://github.com/medDV-GmbH) - Angular 19 fork contributor
+**Original Library:**
+- **Author:** [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) (drozhzhin.n.e@gmail.com) - Original creator and core zoom algorithms
+- **Repository:** [drozhzhin-n-e/ngx-pinch-zoom](https://github.com/drozhzhin-n-e/ngx-pinch-zoom)
 
-**Original Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
+**Angular 19/20 Compatibility Fork:**
+- **Contributors:**
+  - [Konstantin Schütte](https://www.meddv.de) (medDV-GmbH) - Angular 19/20 compatibility updates
+  - [Björn Schmidt](https://www.meddv.de) (medDV-GmbH) - Angular 19/20 compatibility updates
+- **Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
 
-**Current Version:** [Brian Pooe](https://github.com/brianpooe) - Angular 20 modernization and architecture redesign
+**Current Version:**
+- **Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Angular 20 signals migration, architecture redesign, new features
 
 ## License
 
