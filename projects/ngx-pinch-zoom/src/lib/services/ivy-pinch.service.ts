@@ -1551,6 +1551,8 @@ export class IvyPinchService {
      * Destroys the IvyPinch instance.
      *
      * **Cleanup:**
+     * - Resets zoom to original state
+     * - Removes CSS transforms
      * - Removes CSS styles
      * - Destroys touch event handlers
      * - Removes event listeners
@@ -1560,6 +1562,14 @@ export class IvyPinchService {
      * @public
      */
     public destroy(): void {
+        // Reset zoom to initial state before cleanup
+        this.scale = 1;
+        this.moveX = 0;
+        this.moveY = 0;
+        this.element.style.transform = 'none';
+        this.element.style.transition = 'none';
+
+        // Clean up styles and event listeners
         this.removeBasicStyles();
         this.touches.destroy();
     }
