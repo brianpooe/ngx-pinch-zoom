@@ -239,6 +239,73 @@ export class BrightnessControlsComponent {
 }
 ```
 
+### Custom Controls with Plus/Minus Buttons
+
+Build your own custom UI by disabling default controls and using the public methods:
+
+```typescript
+import { Component, viewChild, signal } from '@angular/core';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
+
+@Component({
+    selector: 'app-custom-controls',
+    standalone: true,
+    imports: [PinchZoomComponent],
+    template: `
+        <pinch-zoom
+            #pinchZoom
+            [disableZoomControl]="'disable'"
+            [enableBrightnessControl]="false"
+            [zoomControlScale]="0.5"
+            [brightnessStep]="0.1"
+            (zoomChanged)="onZoomChange($event)"
+            (brightnessChanged)="onBrightnessChange($event)"
+        >
+            <img src="image.jpg" />
+        </pinch-zoom>
+
+        <div class="custom-controls">
+            <button (click)="zoomOut()">Zoom -</button>
+            <button (click)="zoomIn()">Zoom +</button>
+            <button (click)="brightnessOut()">Brightness -</button>
+            <button (click)="brightnessIn()">Brightness +</button>
+        </div>
+
+        <p>Zoom: {{ zoomLevel() }} | Brightness: {{ brightnessLevel() }}</p>
+    `,
+})
+export class CustomControlsComponent {
+    pinchZoom = viewChild<PinchZoomComponent>('pinchZoom');
+
+    zoomLevel = signal(1);
+    brightnessLevel = signal(1.0);
+
+    zoomIn() {
+        this.pinchZoom()?.zoomIn(0.5);
+    }
+
+    zoomOut() {
+        this.pinchZoom()?.zoomOut(0.5);
+    }
+
+    brightnessIn() {
+        this.pinchZoom()?.brightnessIn();
+    }
+
+    brightnessOut() {
+        this.pinchZoom()?.brightnessOut();
+    }
+
+    onZoomChange(scale: number) {
+        this.zoomLevel.set(scale);
+    }
+
+    onBrightnessChange(brightness: number) {
+        this.brightnessLevel.set(brightness);
+    }
+}
+```
+
 ## Configuration Options
 
 | Input                     | Type                              | Default                 | Description                               |
