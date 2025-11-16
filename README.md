@@ -432,14 +432,18 @@ This library is built on the foundation of the original ngx-pinch-zoom, moderniz
 - 778 lines of comprehensive JSDoc documentation
 - Modern TypeScript with full strict mode compliance
 
-**Original Library Authors:**
-- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original ngx-pinch-zoom creator and core logic
-- [Konstantin Schütte](https://github.com/medDV-GmbH) - Angular 19 fork maintainer
-- [Björn Schmidt](https://github.com/medDV-GmbH) - Angular 19 fork contributor
+**Original Library:**
+- **Author:** [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original creator and core zoom algorithms
+- **Repository:** [drozhzhin-n-e/ngx-pinch-zoom](https://github.com/drozhzhin-n-e/ngx-pinch-zoom)
 
-**Original Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
+**Angular 19/20 Compatibility Fork:**
+- **Contributors:**
+  - [Konstantin Schütte](https://www.meddv.de) (medDV-GmbH) - Angular 19/20 compatibility updates
+  - [Björn Schmidt](https://www.meddv.de) (medDV-GmbH) - Angular 19/20 compatibility updates
+- **Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
 
-**Current Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Angular 20 modernization, architecture redesign, and new features
+**Current Version:**
+- **Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Angular 20 signals migration, architecture redesign, new features (brightness control, click-to-zoom), comprehensive documentation
 
 ## Issues and Support
 
