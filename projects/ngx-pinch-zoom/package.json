@@ -1,40 +1,34 @@
 {
-  "name": "@meddv/ngx-pinch-zoom",
+  "name": "@brianpooe/ngx-pinch-zoom",
   "version": "20.0.0",
-  "description": "Pinch zoom component for Angular 20.",
+  "description": "Angular 20 pinch-zoom component rebuilt with modern signals API, professional architecture, and new features. Core zoom logic adapted from original ngx-pinch-zoom with extensive enhancements for brightness control, click-to-zoom, and smart/dumb component patterns.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/medDV-GmbH/ngx-pinch-zoom"
+    "url": "git+https://github.com/brianpooe/ngx-pinch-zoom"
   },
   "author": {
-    "name": "Nikita Drozhzhin",
-    "email": "drozhzhin.n.e@gmail.com"
+    "name": "Brian Pooe",
+    "url": "https://github.com/brianpooe"
   },
-    "contributors": [
-        {
-            "name": "Konstantin Schütte",
-            "email": "team-web@meddv.de",
-            "url": "https://www.meddv.de"
-        },
-        {
-            "name": "Björn Schmidt",
-            "email": "team-web@meddv.de",
-            "url": "https://www.meddv.de"
-        }
-    ],
-  "homepage": "http://www.meddv.de",
+  "homepage": "https://github.com/brianpooe/ngx-pinch-zoom",
   "keywords": [
     "Angular",
-    "Angular 19",
     "Angular 20",
+    "Angular signals",
     "ngx",
     "Pinch zoom",
     "Image zoom",
-    "Touch image zoom"
+    "Touch zoom",
+    "Brightness control",
+    "Click to zoom",
+    "Anomaly detection",
+    "Smart components",
+    "Dumb components",
+    "Container presentational"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/medDV-GmbH/ngx-pinch-zoom/issues"
+    "url": "https://github.com/brianpooe/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
       "@angular/common": ">=19.0.0",
