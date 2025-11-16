@@ -117,7 +117,7 @@ For users upgrading from previous versions:
 2. Update your package.json:
 
     ```bash
-    npm install ngx-pinch-zoom@20.0.0
+    npm install @brianpooe/ngx-pinch-zoom@20.0.0
     ```
 
 3. Template changes: None required! Input/output binding syntax remains the same.

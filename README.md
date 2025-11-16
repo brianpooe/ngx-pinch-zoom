@@ -21,7 +21,7 @@ An Angular library for pinch-to-zoom functionality on touch-enabled devices and 
 ## Installation
 
 ```bash
-npm install ngx-pinch-zoom
+npm install @brianpooe/ngx-pinch-zoom
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ npm install ngx-pinch-zoom
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-root',
@@ -67,7 +67,7 @@ For proper touch support, add this to your `index.html`:
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-example',
@@ -99,7 +99,7 @@ export class ExampleComponent {
 
 ```typescript
 import { Component, viewChild } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-controls',
@@ -138,7 +138,7 @@ Enable click-to-zoom for quick inspection of specific areas:
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-click-zoom',
@@ -171,7 +171,7 @@ Enable brightness controls alongside zoom controls:
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-brightness',
@@ -200,7 +200,7 @@ Programmatic brightness control:
 
 ```typescript
 import { Component, viewChild } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-brightness-controls',

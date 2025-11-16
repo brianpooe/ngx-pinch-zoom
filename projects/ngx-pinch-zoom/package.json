@@ -1,5 +1,5 @@
 {
-  "name": "ngx-pinch-zoom",
+  "name": "@brianpooe/ngx-pinch-zoom",
   "version": "20.0.0",
   "description": "Modern Angular 20 pinch-zoom component with signals, smart/dumb architecture, and professional folder structure. Supports touch gestures, mouse wheel, brightness control, and click-to-zoom for anomaly detection workflows.",
   "repository": {

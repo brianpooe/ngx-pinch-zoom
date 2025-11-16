@@ -22,7 +22,7 @@ Modern Angular 20 pinch-zoom component with signals, smart/dumb architecture, an
 ## Installation
 
 ```bash
-npm install ngx-pinch-zoom
+npm install @brianpooe/ngx-pinch-zoom
 ```
 
 ## Quick Start
@@ -31,7 +31,7 @@ npm install ngx-pinch-zoom
 
 ```typescript
 import { Component } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
     selector: 'app-root',
