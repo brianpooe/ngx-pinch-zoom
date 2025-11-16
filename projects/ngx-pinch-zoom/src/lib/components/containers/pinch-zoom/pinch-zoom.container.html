@@ -17,12 +17,7 @@
 
         <!-- Brightness controls - using dumb component -->
         @if (isBrightnessControl()) {
-            <pz-brightness-controls
-                [atMin]="isBrightnessAtMin()"
-                [atMax]="isBrightnessAtMax()"
-                (increase)="brightnessIn()"
-                (decrease)="brightnessOut()"
-            />
+            <pz-brightness-controls [isBrightened]="isBrightened()" (toggle)="toggleBrightness()" />
         }
     </div>
 }

@@ -196,6 +196,10 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
         return this.brightnessService.state().atMax;
     });
 
+    isBrightened = computed<boolean>(() => {
+        return this.brightness() > 1.0;
+    });
+
     constructor() {
         this.defaultComponentProperties = this.getDefaultComponentProperties();
 
@@ -295,6 +299,16 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
 
     resetBrightness(): void {
         this.brightnessService.reset();
+    }
+
+    toggleBrightness(): void {
+        if (this.isBrightened()) {
+            // If brightness is increased, reset to normal
+            this.brightnessService.reset();
+        } else {
+            // If brightness is normal, set to max
+            this.brightnessService.setValue(this.maxBrightness());
+        }
     }
 
     zoomToPoint(event: MouseEvent): void {
