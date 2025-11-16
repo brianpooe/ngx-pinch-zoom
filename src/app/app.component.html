@@ -381,8 +381,10 @@
             [disableZoomControl]="'disable'"
             [enableBrightnessControl]="false"
             [brightnessStep]="0.1"
+            [minBrightness]="1.0"
+            [maxBrightness]="3.0"
             [minScale]="1"
-            [limitZoom]="5"
+            [limitZoom]="8"
             (zoomChanged)="onCustomZoomChanged($event)"
             (brightnessChanged)="onCustomBrightnessChanged($event)"
         >
