@@ -31,6 +31,11 @@ export class AppComponent {
     private readonly MAX_BRIGHTNESS = 2.0;
 
     // Computed signals for button states - reading zoom directly from component
+    customZoomScale = computed(() => {
+        const pinch = this.customPinch();
+        return pinch?.scale() ?? 1;
+    });
+
     isZoomAtMin = computed(() => {
         const pinch = this.customPinch();
         if (!pinch) return true;
