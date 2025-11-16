@@ -371,8 +371,9 @@
     <div class="demo">
         <h2>Custom Zoom & Brightness Controls</h2>
         <p>
-            Build your own custom control UI using the component's public methods. This example demonstrates plus/minus buttons for both zoom
-            and brightness, with default controls disabled. Perfect for integrating controls into your own toolbar or UI layout.
+            Build your own custom control UI using the component's public methods. This example demonstrates plus/minus buttons with smart
+            behavior: minus buttons are disabled when at minimum (initial state), plus buttons reset to minimum when at maximum. Perfect for
+            integrating controls into your own toolbar or UI layout.
         </p>
         <p>Zoom State: {{ zoomstate() }} | Brightness State: {{ brightnessstate().toFixed(2) }}</p>
         <pinch-zoom
@@ -389,10 +390,12 @@
             />
         </pinch-zoom>
         <div class="actions">
-            <button class="btn btn-small btn-blue btn-rounded" (click)="customPinch.zoomOut(0.5)">Zoom -</button>
-            <button class="btn btn-small btn-blue btn-rounded" (click)="customPinch.zoomIn(0.5)">Zoom +</button>
-            <button class="btn btn-small btn-green btn-rounded" (click)="customPinch.brightnessOut()">Brightness -</button>
-            <button class="btn btn-small btn-green btn-rounded" (click)="customPinch.brightnessIn()">Brightness +</button>
+            <button class="btn btn-small btn-blue btn-rounded" [disabled]="isZoomAtMin()" (click)="handleZoomOut()">Zoom -</button>
+            <button class="btn btn-small btn-blue btn-rounded" (click)="handleZoomIn()">Zoom +</button>
+            <button class="btn btn-small btn-green btn-rounded" [disabled]="isBrightnessAtMin()" (click)="handleBrightnessOut()">
+                Brightness -
+            </button>
+            <button class="btn btn-small btn-green btn-rounded" (click)="handleBrightnessIn()">Brightness +</button>
         </div>
     </div>
 </div>

@@ -241,10 +241,10 @@ export class BrightnessControlsComponent {
 
 ### Custom Controls with Plus/Minus Buttons
 
-Build your own custom UI by disabling default controls and using the public methods:
+Build your own custom UI by disabling default controls and using the public methods with smart min/max behavior:
 
 ```typescript
-import { Component, viewChild, signal } from '@angular/core';
+import { Component, viewChild, signal, computed } from '@angular/core';
 import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 @Component({
@@ -265,10 +265,10 @@ import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
         </pinch-zoom>
 
         <div class="custom-controls">
-            <button (click)="zoomOut()">Zoom -</button>
-            <button (click)="zoomIn()">Zoom +</button>
-            <button (click)="brightnessOut()">Brightness -</button>
-            <button (click)="brightnessIn()">Brightness +</button>
+            <button [disabled]="isZoomAtMin()" (click)="handleZoomOut()">Zoom -</button>
+            <button (click)="handleZoomIn()">Zoom +</button>
+            <button [disabled]="isBrightnessAtMin()" (click)="handleBrightnessOut()">Brightness -</button>
+            <button (click)="handleBrightnessIn()">Brightness +</button>
         </div>
 
         <p>Zoom: {{ zoomLevel() }} | Brightness: {{ brightnessLevel() }}</p>
@@ -280,20 +280,51 @@ export class CustomControlsComponent {
     zoomLevel = signal(1);
     brightnessLevel = signal(1.0);
 
-    zoomIn() {
-        this.pinchZoom()?.zoomIn(0.5);
+    // Min/max constants
+    private readonly MIN_ZOOM = 1;
+    private readonly MIN_BRIGHTNESS = 1.0;
+    private readonly MAX_BRIGHTNESS = 2.0;
+
+    // Computed signals for button states
+    isZoomAtMin = computed(() => this.zoomLevel() <= this.MIN_ZOOM);
+    isBrightnessAtMin = computed(() => this.brightnessLevel() <= this.MIN_BRIGHTNESS);
+
+    // Smart handlers with min/max and reset behavior
+    handleZoomIn() {
+        const pinch = this.pinchZoom();
+        if (!pinch) return;
+
+        const maxScale = pinch.maxScale();
+        if (this.zoomLevel() >= maxScale) {
+            // At max, reset to min
+            pinch.destroy();
+        } else {
+            pinch.zoomIn(0.5);
+        }
     }
 
-    zoomOut() {
-        this.pinchZoom()?.zoomOut(0.5);
+    handleZoomOut() {
+        const pinch = this.pinchZoom();
+        if (!pinch || this.isZoomAtMin()) return;
+        pinch.zoomOut(0.5);
     }
 
-    brightnessIn() {
-        this.pinchZoom()?.brightnessIn();
+    handleBrightnessIn() {
+        const pinch = this.pinchZoom();
+        if (!pinch) return;
+
+        if (this.brightnessLevel() >= this.MAX_BRIGHTNESS) {
+            // At max, reset to normal
+            pinch.resetBrightness();
+        } else {
+            pinch.brightnessIn();
+        }
     }
 
-    brightnessOut() {
-        this.pinchZoom()?.brightnessOut();
+    handleBrightnessOut() {
+        const pinch = this.pinchZoom();
+        if (!pinch || this.isBrightnessAtMin()) return;
+        pinch.brightnessOut();
     }
 
     onZoomChange(scale: number) {
@@ -305,6 +336,11 @@ export class CustomControlsComponent {
     }
 }
 ```
+
+**Smart Control Behavior:**
+- **Minus buttons**: Disabled when at minimum value (initial state), prevent going below min
+- **Plus buttons**: When at maximum value, clicking resets to minimum instead of being disabled
+- This pattern provides intuitive UX - users can't accidentally go below min, and can easily reset from max
 
 ## Configuration Options
 
