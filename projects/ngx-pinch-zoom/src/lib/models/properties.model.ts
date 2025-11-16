@@ -1,4 +1,4 @@
-import { Properties } from './interfaces';
+import { Properties } from './interfaces.model';
 
 export const defaultProperties: Properties = {
     transitionDuration: 200,

@@ -1,3 +1,8 @@
+// Core models
+export * from './properties.model';
+export * from './interfaces.model';
+
+// Feature models
 export * from './zoom-config.model';
 export * from './transform-state.model';
 export * from './brightness-state.model';
