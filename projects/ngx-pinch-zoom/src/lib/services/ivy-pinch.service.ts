@@ -1553,24 +1553,26 @@ export class IvyPinchService {
      * **Cleanup:**
      * - Resets zoom to original state
      * - Removes CSS transforms
-     * - Removes CSS styles
      * - Destroys touch event handlers
      * - Removes event listeners
      *
-     * **Important:** Call this when removing the component to prevent memory leaks.
+     * **Note:** This method resets zoom state but keeps layout styles intact,
+     * so the component remains functional after calling destroy().
+     *
+     * **Important:** Automatically called by component's ngOnDestroy.
+     * Can also be called manually to reset the component.
      *
      * @public
      */
     public destroy(): void {
-        // Reset zoom to initial state before cleanup
+        // Reset zoom to initial state
         this.scale = 1;
         this.moveX = 0;
         this.moveY = 0;
         this.element.style.transform = 'none';
         this.element.style.transition = 'none';
 
-        // Clean up styles and event listeners
-        this.removeBasicStyles();
+        // Clean up event listeners (but keep layout styles for component reusability)
         this.touches.destroy();
     }
 
