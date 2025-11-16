@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
@@ -11,8 +11,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
     providers: [
-        // Zoneless mode is now stable in Angular 20+ (no Zone.js needed)
-        // When no zone provider is specified, Angular runs in zoneless mode
+        provideZonelessChangeDetection(), // Zoneless mode for better performance with signals
         provideRouter([]),
     ],
 }).catch((err) => console.error(err));
