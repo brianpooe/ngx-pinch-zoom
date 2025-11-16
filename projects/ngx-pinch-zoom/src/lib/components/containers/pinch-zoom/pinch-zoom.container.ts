@@ -1,13 +1,10 @@
 import { Component, ElementRef, HostBinding, OnInit, OnDestroy, computed, input, output, signal, effect, inject } from '@angular/core';
-
-import { Properties } from './interfaces';
-import { defaultProperties } from './properties';
-import { IvyPinch } from './ivypinch';
 import { CommonModule } from '@angular/common';
-import { BrightnessService } from './services/brightness.service';
-import { ZoomStateService } from './services/zoom-state.service';
-import { ZoomControlsComponent } from './components/zoom-controls/zoom-controls.component';
-import { BrightnessControlsComponent } from './components/brightness-controls/brightness-controls.component';
+
+import { Properties, defaultProperties } from '../../../models';
+import { IvyPinch, BrightnessService, ZoomStateService } from '../../../services';
+import { ZoomControlsComponent } from '../../presentational/zoom-controls/zoom-controls.component';
+import { BrightnessControlsComponent } from '../../presentational/brightness-controls/brightness-controls.component';
 
 interface ComponentProperties extends Properties {
     disabled?: boolean;
@@ -25,8 +22,8 @@ export const _defaultComponentProperties: ComponentProperties = {
 @Component({
     selector: 'pinch-zoom, [pinch-zoom]',
     exportAs: 'pinchZoom',
-    templateUrl: './pinch-zoom.component.html',
-    styleUrls: ['./pinch-zoom.component.sass'],
+    templateUrl: './pinch-zoom.container.html',
+    styleUrls: ['./pinch-zoom.container.sass'],
     standalone: true,
     imports: [CommonModule, ZoomControlsComponent, BrightnessControlsComponent],
     providers: [BrightnessService, ZoomStateService],
