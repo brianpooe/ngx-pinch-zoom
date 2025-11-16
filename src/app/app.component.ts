@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { PinchZoomComponent } from 'ngx-pinch-zoom';
+import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 /**
  * Example app demonstrating all ngx-pinch-zoom features.
