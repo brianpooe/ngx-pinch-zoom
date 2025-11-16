@@ -1,4 +1,4 @@
-import { Component, signal, computed, viewChild } from '@angular/core';
+import { Component, signal, computed, viewChild, effect } from '@angular/core';
 import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 
 /**
@@ -33,10 +33,27 @@ export class AppComponent {
     private readonly MAX_BRIGHTNESS = 2.0;
 
     // Computed signals for button states
-    isZoomAtMin = computed(() => this.customZoomState() <= this.MIN_ZOOM);
+    isZoomAtMin = computed(() => {
+        const zoom = this.customZoomState();
+        return zoom <= this.MIN_ZOOM + 0.01; // Small tolerance for float comparison
+    });
 
     isBrightnessAtMin = computed(() => this.customBrightnessState() <= this.MIN_BRIGHTNESS);
     isBrightnessAtMax = computed(() => this.customBrightnessState() >= this.MAX_BRIGHTNESS);
+
+    constructor() {
+        // Ensure initial zoom state is properly set when component loads
+        effect(() => {
+            const pinch = this.customPinch();
+            if (pinch) {
+                // Sync initial state if not already synced
+                const currentScale = pinch.scale();
+                if (this.customZoomState() !== currentScale) {
+                    this.customZoomState.set(currentScale);
+                }
+            }
+        });
+    }
 
     onZoomChanged(zoom: number): void {
         this.zoomstate.set(zoom);
@@ -60,21 +77,26 @@ export class AppComponent {
         const pinch = this.customPinch();
         if (!pinch) return;
 
-        const maxScale = pinch.maxScale();
         const currentScale = this.customZoomState();
 
-        // Check if we're at or very close to max (within 0.01 tolerance)
-        if (currentScale >= maxScale - 0.01) {
-            // At max, reset to min
+        // Try to zoom in and check the result
+        const newScale = pinch.zoomIn(this.ZOOM_STEP);
+
+        // If scale didn't change (much), we're at max, so reset
+        if (Math.abs(newScale - currentScale) < 0.01) {
             pinch.destroy();
-        } else {
-            pinch.zoomIn(this.ZOOM_STEP);
+            this.customZoomState.set(1); // Manually reset state
         }
     }
 
     handleZoomOut(): void {
         const pinch = this.customPinch();
-        if (!pinch || this.isZoomAtMin()) return;
+        if (!pinch) return;
+
+        const currentScale = this.customZoomState();
+
+        // Don't allow going below min
+        if (currentScale <= this.MIN_ZOOM) return;
 
         pinch.zoomOut(this.ZOOM_STEP);
     }
