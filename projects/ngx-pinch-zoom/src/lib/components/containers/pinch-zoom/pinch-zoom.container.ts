@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, OnInit, OnDestroy, computed, input,
 import { CommonModule } from '@angular/common';
 
 import { Properties, defaultProperties } from '../../../models';
-import { IvyPinch, BrightnessService, ZoomStateService } from '../../../services';
+import { IvyPinchService, TouchesService, BrightnessService, ZoomStateService } from '../../../services';
 import { ZoomControlsComponent } from '../../presentational/zoom-controls/zoom-controls.component';
 import { BrightnessControlsComponent } from '../../presentational/brightness-controls/brightness-controls.component';
 
@@ -26,13 +26,13 @@ export const _defaultComponentProperties: ComponentProperties = {
     styleUrls: ['./pinch-zoom.container.sass'],
     standalone: true,
     imports: [CommonModule, ZoomControlsComponent, BrightnessControlsComponent],
-    providers: [BrightnessService, ZoomStateService],
+    providers: [IvyPinchService, TouchesService, BrightnessService, ZoomStateService],
 })
 export class PinchZoomComponent implements OnInit, OnDestroy {
     private readonly elementRef = inject(ElementRef<HTMLElement>);
+    private readonly ivyPinchService = inject(IvyPinchService);
     private readonly brightnessService = inject(BrightnessService);
     private readonly zoomStateService = inject(ZoomStateService);
-    private pinchZoom!: IvyPinch;
     private readonly defaultComponentProperties: ComponentProperties;
 
     // Input signals - modern Angular v20 pattern
@@ -128,7 +128,7 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     });
 
     isDragging = computed<boolean>(() => {
-        return this.pinchZoom?.isDragging() || false;
+        return this.ivyPinchService?.isDragging() || false;
     });
 
     isDisabled = computed<boolean>(() => {
@@ -148,7 +148,7 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
     });
 
     maxScale = computed<number>(() => {
-        return this.pinchZoom?.maxScale || 3;
+        return this.ivyPinchService?.maxScale || 3;
     });
 
     isZoomLimitReached = computed<boolean>(() => {
@@ -212,7 +212,7 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
         // Effect to reinitialize when properties change
         effect(() => {
             const props = this.mergedProperties();
-            if (this.pinchZoom && !props.disabled) {
+            if (this.ivyPinchService && !props.disabled) {
                 // Properties have changed, reinitialize if needed
                 this.detectLimitZoom();
             }
@@ -267,22 +267,22 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
             element: element,
         };
 
-        this.pinchZoom = new IvyPinch(ivyPinchProps, (scale: number) => {
+        this.ivyPinchService.init(ivyPinchProps, (scale: number) => {
             this.currentScale.set(scale);
             this.zoomChanged.emit(scale);
         });
     }
 
     toggleZoom(): void {
-        this.pinchZoom?.toggleZoom();
+        this.ivyPinchService?.toggleZoom();
     }
 
     zoomIn(value: number): number {
-        return this.pinchZoom?.zoomIn(value) || this.scale();
+        return this.ivyPinchService?.zoomIn(value) || this.scale();
     }
 
     zoomOut(value: number): number {
-        return this.pinchZoom?.zoomOut(value) || this.scale();
+        return this.ivyPinchService?.zoomOut(value) || this.scale();
     }
 
     brightnessIn(): number {
@@ -311,15 +311,15 @@ export class PinchZoomComponent implements OnInit, OnDestroy {
         const clientY = event.clientY;
 
         // Call IvyPinch method with target scale
-        this.pinchZoom?.zoomToPoint(clientX, clientY, this.clickToZoomScale());
+        this.ivyPinchService?.zoomToPoint(clientX, clientY, this.clickToZoomScale());
     }
 
     detectLimitZoom(): void {
-        this.pinchZoom?.detectLimitZoom();
+        this.ivyPinchService?.detectLimitZoom();
     }
 
     destroy(): void {
-        this.pinchZoom?.destroy();
+        this.ivyPinchService?.destroy();
     }
 
     private getPropertiesValue<K extends keyof ComponentProperties>(propertyName: K): ComponentProperties[K] {
