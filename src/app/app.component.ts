@@ -19,7 +19,8 @@ export class AppComponent {
     zoomstate = signal(1);
     brightnessstate = signal(1.0);
 
-    // Separate state for custom controls example (brightness only, zoom read from component)
+    // Separate state for custom controls example
+    customZoomState = signal(1);
     customBrightnessState = signal(1.0);
 
     // Reference to custom controls pinch-zoom instance
@@ -27,20 +28,12 @@ export class AppComponent {
 
     // Custom controls configuration
     private readonly MIN_ZOOM = 1;
+    private readonly ZOOM_STEP = 0.5;
     private readonly MIN_BRIGHTNESS = 1.0;
     private readonly MAX_BRIGHTNESS = 2.0;
 
-    // Computed signals for button states - reading zoom directly from component
-    customZoomScale = computed(() => {
-        const pinch = this.customPinch();
-        return pinch?.scale() ?? 1;
-    });
-
-    isZoomAtMin = computed(() => {
-        const pinch = this.customPinch();
-        if (!pinch) return true;
-        return pinch.scale() <= this.MIN_ZOOM;
-    });
+    // Computed signals for button states
+    isZoomAtMin = computed(() => this.customZoomState() <= this.MIN_ZOOM);
 
     isBrightnessAtMin = computed(() => this.customBrightnessState() <= this.MIN_BRIGHTNESS);
     isBrightnessAtMax = computed(() => this.customBrightnessState() >= this.MAX_BRIGHTNESS);
@@ -53,7 +46,11 @@ export class AppComponent {
         this.brightnessstate.set(brightness);
     }
 
-    // Custom controls event handler (brightness only)
+    // Custom controls event handlers
+    onCustomZoomChanged(zoom: number): void {
+        this.customZoomState.set(zoom);
+    }
+
     onCustomBrightnessChanged(brightness: number): void {
         this.customBrightnessState.set(brightness);
     }
@@ -64,15 +61,14 @@ export class AppComponent {
         if (!pinch) return;
 
         const maxScale = pinch.maxScale();
-        const currentScale = pinch.scale();
+        const currentScale = this.customZoomState();
 
-        if (currentScale >= maxScale) {
+        // Check if we're at or very close to max (within 0.01 tolerance)
+        if (currentScale >= maxScale - 0.01) {
             // At max, reset to min
             pinch.destroy();
         } else {
-            // Use zoomControlScale from the component
-            const zoomStep = pinch._zoomControlScale();
-            pinch.zoomIn(zoomStep);
+            pinch.zoomIn(this.ZOOM_STEP);
         }
     }
 
@@ -80,9 +76,7 @@ export class AppComponent {
         const pinch = this.customPinch();
         if (!pinch || this.isZoomAtMin()) return;
 
-        // Use zoomControlScale from the component
-        const zoomStep = pinch._zoomControlScale();
-        pinch.zoomOut(zoomStep);
+        pinch.zoomOut(this.ZOOM_STEP);
     }
 
     handleBrightnessIn(): void {
