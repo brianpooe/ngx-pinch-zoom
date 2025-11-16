@@ -85,8 +85,8 @@ lib/
 ├── services/                   # Business logic
 │   ├── brightness.service.ts   # Angular service for brightness state
 │   ├── zoom-state.service.ts   # Angular service for zoom state
-│   ├── ivy-pinch.service.ts    # Core zoom/pan engine (utility class)
-│   └── touches.service.ts      # Gesture detection (utility class)
+│   ├── ivy-pinch.service.ts    # Angular service for core zoom/pan engine
+│   └── touches.service.ts      # Angular service for gesture detection
 │
 └── components/
     ├── containers/             # Smart components (with DI)
@@ -109,9 +109,10 @@ lib/
 
 **Service-Based Architecture**
 
-- Business logic extracted into reusable services
-- `BrightnessService` and `ZoomStateService` use Angular's DI system
-- Core zoom logic (`IvyPinch`, `Touches`) are utility classes instantiated with `new`
+- All business logic extracted into reusable Angular services
+- `BrightnessService` and `ZoomStateService` manage reactive state
+- `IvyPinchService` and `TouchesService` are Angular services handling core zoom/gesture logic
+- All services use Angular's DI system and are provided at component level
 
 **Signal-Based Reactivity**
 

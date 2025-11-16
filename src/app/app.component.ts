@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { PinchZoomComponent } from 'ngx-pinch-zoom';
 
+/**
+ * Example app demonstrating all ngx-pinch-zoom features.
+ * Uses Angular 20 standalone component with signals.
+ */
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.sass'],
-    standalone: false,
+    standalone: true,
+    imports: [PinchZoomComponent],
 })
 export class AppComponent {
     title = 'ivypinchApp';
-    public zoomstate = 1;
-    public brightnessstate = 1.0;
 
-    onZoomChanged(zoom: number) {
-        this.zoomstate = zoom;
+    // Use signals for reactive state management
+    zoomstate = signal(1);
+    brightnessstate = signal(1.0);
+
+    onZoomChanged(zoom: number): void {
+        this.zoomstate.set(zoom);
     }
 
-    onBrightnessChanged(brightness: number) {
-        this.brightnessstate = brightness;
+    onBrightnessChanged(brightness: number): void {
+        this.brightnessstate.set(brightness);
     }
 }
