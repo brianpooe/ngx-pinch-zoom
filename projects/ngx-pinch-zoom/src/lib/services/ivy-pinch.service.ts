@@ -1113,23 +1113,23 @@ export class IvyPinchService {
     /**
      * Gets the height of the target element (usually IMG).
      *
-     * @returns Element offset height in pixels
+     * @returns Element offset height in pixels, or 0 if not initialized
      * @private
      */
     private getImageHeight(): number {
-        const img = this.getImageElement() as HTMLImageElement;
-        return img.offsetHeight;
+        const img = this.getImageElement();
+        return img?.offsetHeight || 0;
     }
 
     /**
      * Gets the width of the target element (usually IMG).
      *
-     * @returns Element offset width in pixels
+     * @returns Element offset width in pixels, or 0 if not initialized
      * @private
      */
     private getImageWidth(): number {
-        const img = this.getImageElement() as HTMLImageElement;
-        return img.offsetWidth;
+        const img = this.getImageElement();
+        return img?.offsetWidth || 0;
     }
 
     /**
@@ -1139,6 +1139,11 @@ export class IvyPinchService {
      * @private
      */
     private getImageElement(): HTMLElement | undefined {
+        // Guard against accessing element before initialization (important in zoneless mode)
+        if (!this.element) {
+            return undefined;
+        }
+
         const imgElement = this.element.getElementsByTagName(this.elementTarget);
 
         if (imgElement.length) {
@@ -1245,11 +1250,15 @@ export class IvyPinchService {
      *
      * Used by component to set cursor styles.
      *
+     * **Zoneless Mode:**
+     * - Returns false if service not initialized (important for computed signals)
+     *
      * @returns True if element can be dragged
      * @public
      */
     public isDragging(): boolean {
-        if (this.properties.disablePan) {
+        // Guard against accessing before initialization (critical in zoneless mode)
+        if (!this.element || !this.parentElement || this.properties.disablePan) {
             return false;
         }
 
