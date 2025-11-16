@@ -1,7 +1,7 @@
 {
   "name": "@brianpooe/ngx-pinch-zoom",
   "version": "20.0.0",
-  "description": "Modern Angular 20 pinch-zoom component with signals, smart/dumb architecture, and professional folder structure. Supports touch gestures, mouse wheel, brightness control, and click-to-zoom for anomaly detection workflows.",
+  "description": "Angular 20 pinch-zoom component rebuilt with modern signals API, professional architecture, and new features. Core zoom logic adapted from original ngx-pinch-zoom with extensive enhancements for brightness control, click-to-zoom, and smart/dumb component patterns.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brianpooe/ngx-pinch-zoom"

@@ -145,17 +145,29 @@ This library is particularly well-suited for:
 
 ## Credits
 
-This is a complete rewrite of the original ngx-pinch-zoom library, modernized for Angular 20 with signals API, professional architecture patterns, and additional features.
+This library modernizes the original ngx-pinch-zoom for Angular 20 while preserving its excellent core zoom logic.
+
+**Core Logic Attribution:**
+- Pinch-to-zoom mathematics and transform algorithms from original library
+- Touch and mouse gesture detection logic adapted from original
+- Zoom constraints and pan limit calculations from original
+
+**Modernization & New Features:**
+- Angular 20 signals API implementation
+- Professional architecture with smart/dumb components
+- Brightness control feature
+- Click-to-zoom feature
+- Service-based state management
+- Comprehensive JSDoc documentation
 
 **Original Library Authors:**
-
-- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original ngx-pinch-zoom creator
+- [Nikita Drozhzhin](https://github.com/drozhzhin-n-e) - Original creator, core zoom algorithms
 - [Konstantin Schütte](https://github.com/medDV-GmbH) - Angular 19 fork maintainer
 - [Björn Schmidt](https://github.com/medDV-GmbH) - Angular 19 fork contributor
 
 **Original Repository:** [medDV-GmbH/ngx-pinch-zoom](https://github.com/medDV-GmbH/ngx-pinch-zoom)
 
-**Current Maintainer:** [Brian Pooe](https://github.com/brianpooe) - Complete Angular 20 rewrite with modern architecture
+**Current Version:** [Brian Pooe](https://github.com/brianpooe) - Angular 20 modernization and architecture redesign
 
 ## License
 
