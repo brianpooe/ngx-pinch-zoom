@@ -15,9 +15,13 @@ import { PinchZoomComponent } from '@brianpooe/ngx-pinch-zoom';
 export class AppComponent {
     title = 'ivypinchApp';
 
-    // Use signals for reactive state management
+    // Use signals for reactive state management (general examples)
     zoomstate = signal(1);
     brightnessstate = signal(1.0);
+
+    // Separate state for custom controls example
+    customZoomState = signal(1);
+    customBrightnessState = signal(1.0);
 
     // Reference to custom controls pinch-zoom instance
     customPinch = viewChild<PinchZoomComponent>('customPinch');
@@ -28,9 +32,9 @@ export class AppComponent {
     private readonly MAX_BRIGHTNESS = 2.0;
 
     // Computed signals for button states
-    isZoomAtMin = computed(() => this.zoomstate() <= this.MIN_ZOOM);
-    isBrightnessAtMin = computed(() => this.brightnessstate() <= this.MIN_BRIGHTNESS);
-    isBrightnessAtMax = computed(() => this.brightnessstate() >= this.MAX_BRIGHTNESS);
+    isZoomAtMin = computed(() => this.customZoomState() <= this.MIN_ZOOM);
+    isBrightnessAtMin = computed(() => this.customBrightnessState() <= this.MIN_BRIGHTNESS);
+    isBrightnessAtMax = computed(() => this.customBrightnessState() >= this.MAX_BRIGHTNESS);
 
     onZoomChanged(zoom: number): void {
         this.zoomstate.set(zoom);
@@ -40,13 +44,22 @@ export class AppComponent {
         this.brightnessstate.set(brightness);
     }
 
+    // Custom controls event handlers
+    onCustomZoomChanged(zoom: number): void {
+        this.customZoomState.set(zoom);
+    }
+
+    onCustomBrightnessChanged(brightness: number): void {
+        this.customBrightnessState.set(brightness);
+    }
+
     // Custom control handlers with min/max and reset behavior
     handleZoomIn(): void {
         const pinch = this.customPinch();
         if (!pinch) return;
 
         const maxScale = pinch.maxScale();
-        const currentScale = this.zoomstate();
+        const currentScale = this.customZoomState();
 
         if (currentScale >= maxScale) {
             // At max, reset to min
